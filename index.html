@@ -623,6 +623,248 @@
       animation: pulse 2s infinite;
     }
 
+
+    /* View Navigation Tabs */
+    .view-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      max-width: 1720px;
+      margin-left: auto;
+      margin-right: auto;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+      border-color: var(--border-highlight);
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    /* Schedule View Layout */
+    .schedule-panel {
+      max-width: 1720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-bottom: 30px;
+    }
+
+    .schedule-toolbar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .member-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .member-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .member-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+
+    .member-btn.active-all {
+      background: linear-gradient(135deg, #8b5cf6 0%, #2563eb 100%);
+      color: #ffffff;
+      border-color: #a78bfa;
+    }
+
+    /* Schedule Table */
+    .schedule-table-wrap {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      padding: 8px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(12px);
+    }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
+    }
+
+    .schedule-table th, .schedule-table td {
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    .schedule-table th {
+      background: rgba(0, 0, 0, 0.25);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    .schedule-table th.time-col {
+      width: 150px;
+      text-align: left;
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    .schedule-table td.time-cell {
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .sched-cell {
+      min-height: 85px;
+      height: 95px;
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .sched-cell:hover {
+      filter: brightness(1.2);
+      transform: translateY(-1px);
+    }
+
+    .sched-cell.free {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    .sched-cell.busy {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .sched-cell.lecture {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+    }
+
+    .sched-cell.meeting {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #c084fc;
+    }
+
+    .sched-cell.heatmap-perfect {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.08) 100%);
+      border: 2px solid #10b981;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+    }
+
+    .sched-cell.heatmap-good {
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+
+    .sched-cell.heatmap-low {
+      background: rgba(100, 116, 139, 0.12);
+      border: 1px solid rgba(100, 116, 139, 0.25);
+      color: #94a3b8;
+    }
+
+    .cell-title {
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cell-sub {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .cell-members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 5px;
+    }
+
+    .member-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
     @media print {
       body {
         background: white !important;
@@ -673,6 +915,18 @@
     </div>
   </header>
 
+  <!-- Top Level View Navigation Tabs -->
+  <div class="view-tabs">
+    <button class="tab-btn active" id="tab-btn-kanban" onclick="switchView('kanban')">
+      🗓️ Deadlines & Eksamener (37)
+    </button>
+    <button class="tab-btn" id="tab-btn-schedule" onclick="switchView('schedule')">
+      📅 Team 6 Ukeplan & Tilgjengelighet
+    </button>
+  </div>
+
+
+<div id="kanban-view">
   <!-- High-Level Metric Stats Bar -->
   <div class="stats-bar">
     <div class="stat-card" style="border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(18, 26, 43, 0.8) 100%);">
@@ -801,6 +1055,71 @@
       <div class="column-cards" id="cards-completed"></div>
     </div>
   </main>
+  </div>
+
+
+  <!-- Team 6 Weekly Schedule & Availability View -->
+  <div id="schedule-view" style="display: none;" class="schedule-panel">
+    <!-- Schedule Toolbar -->
+    <div class="schedule-toolbar">
+      <div class="toolbar-group">
+        <span class="filter-label">Visning:</span>
+        <button class="member-btn active-all" id="mbtn-all" onclick="selectScheduleMember('all')">⭐ Felles Heatmap (Hele teamet)</button>
+        <span class="filter-label" style="margin-left: 10px;">Medlem:</span>
+        <button class="member-btn" id="mbtn-Olav" onclick="selectScheduleMember('Olav')">Olav</button>
+        <button class="member-btn" id="mbtn-Camilla" onclick="selectScheduleMember('Camilla')">Camilla</button>
+        <button class="member-btn" id="mbtn-Ingrid" onclick="selectScheduleMember('Ingrid')">Ingrid</button>
+        <button class="member-btn" id="mbtn-Aki" onclick="selectScheduleMember('Aki')">Aki</button>
+        <button class="member-btn" id="mbtn-Kristin" onclick="selectScheduleMember('Kristin')">Kristin</button>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="filter-label">Klikk-status:</span>
+        <button class="chip active" id="stbtn-free" onclick="setActiveStatusTool('free')">🟢 Ledig</button>
+        <button class="chip" id="stbtn-busy" onclick="setActiveStatusTool('busy')">🔴 Opptatt</button>
+        <button class="chip" id="stbtn-meeting" onclick="setActiveStatusTool('meeting')">👥 Team-økt</button>
+        <button class="chip" id="stbtn-lecture" onclick="setActiveStatusTool('lecture')">🎓 Forelesning</button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="btn btn-primary" onclick="copyScheduleMarkdown()" title="Kopierer ferdig tabell til utklippstavlen klar for Notion eller Discord">📋 Kopier Tabell til Notion / Discord</button>
+        <button class="btn" onclick="resetSchedule()">🔄 Nullstill til Standard</button>
+        <button class="btn" onclick="exportScheduleJSON()">📥 Eksporter JSON</button>
+        <button class="btn" onclick="importScheduleJSON()">📤 Importer JSON</button>
+      </div>
+    </div>
+
+    <!-- Schedule Table Grid -->
+    <div class="schedule-table-wrap">
+      <table class="schedule-table" id="schedule-table">
+        <thead>
+          <tr>
+            <th class="time-col">Tidspunkt</th>
+            <th>Mandag</th>
+            <th>Tirsdag</th>
+            <th>Onsdag</th>
+            <th>Torsdag</th>
+            <th>Fredag</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-tbody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: var(--bg-surface); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 13px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div>
+        💡 <strong>Tips:</strong> Velg ditt navn for å klikke inn dine ledige tider. Velg <strong>Felles Heatmap</strong> for å se når flest er ledige samtidig (grønn ramme = fulltallig team 5/5!).
+      </div>
+      <div style="display: flex; gap: 12px; font-size: 12px;">
+        <span>🟢 5/5 Ledige (Fellesmøte)</span>
+        <span>🟡 3–4/5 Ledige (Flertall)</span>
+        <span>🎓 Fast Forelesning</span>
+        <span>🔴 Opptatt</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Details Dialog -->
   <div class="modal-backdrop" id="card-modal" onclick="closeModal(event)">
@@ -2002,7 +2321,379 @@
       }
     });
 
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // Team 6 Weekly Schedule & Availability Grid Engine
+    // ══════════════════════════════════════════════════════════════════════════════
+
+    const TEAM_MEMBERS = ["Olav", "Camilla", "Ingrid", "Aki", "Kristin"];
+
+    const SCHED_DAYS = [
+      { id: "mon", label: "Mandag" },
+      { id: "tue", label: "Tirsdag" },
+      { id: "wed", label: "Onsdag" },
+      { id: "thu", label: "Torsdag" },
+      { id: "fri", label: "Fredag" }
+    ];
+
+    const SCHED_TIMES = [
+      { id: "0815", label: "08:15 – 09:00", name: "Morgen" },
+      { id: "0915", label: "09:15 – 12:00", name: "Hovedforelesning" },
+      { id: "1200", label: "12:00 – 13:00", name: "Lunsj" },
+      { id: "1315", label: "13:15 – 15:00", name: "Ettermiddag 1" },
+      { id: "1515", label: "15:15 – 17:00", name: "Ettermiddag 2" },
+      { id: "1700", label: "17:00 – 19:00", name: "Kveld 1" },
+      { id: "1900", label: "19:00 – 21:00", name: "Kveld 2" }
+    ];
+
+    let currentView = "kanban";
+    let selectedMember = "all";
+    let activeStatusTool = "free";
+    let scheduleData = null;
+
+    function buildDefaultSchedule() {
+      const data = {};
+      TEAM_MEMBERS.forEach(m => {
+        data[m] = {};
+        SCHED_DAYS.forEach(d => {
+          SCHED_TIMES.forEach(t => {
+            const key = `${d.id}_${t.id}`;
+            // Standard faste UiO-forelesninger
+            if (t.id === "0915") {
+              if (d.id === "mon") {
+                data[m][key] = { status: "lecture", title: "ENT4230 (OJD)", note: "Finansiell analyse" };
+              } else if (d.id === "tue") {
+                data[m][key] = { status: "lecture", title: "ENT4080 (OJD)", note: "Opportunity Eval" };
+              } else if (d.id === "wed") {
+                data[m][key] = { status: "lecture", title: "ENT4050 (OJD)", note: "Ledelse & Team" };
+              } else if (d.id === "thu") {
+                data[m][key] = { status: "lecture", title: "ENT4000 (OJD)", note: "Needfinding" };
+              } else if (d.id === "fri") {
+                data[m][key] = { status: "free", title: "Forelesningsfri", note: "Prosjekt / Egentid" };
+              }
+            } else if (t.id === "1200") {
+              data[m][key] = { status: "free", title: "Lunsj", note: "" };
+            } else if (t.id === "1315" || t.id === "1515") {
+              data[m][key] = { status: "free", title: "Ledig", note: "Kollokvie / Møte" };
+            } else {
+              data[m][key] = { status: "free", title: "Ledig", note: "" };
+            }
+          });
+        });
+      });
+      return data;
+    }
+
+    function initSchedule() {
+      const saved = localStorage.getItem("team6_schedule_v1");
+      if (saved) {
+        try {
+          scheduleData = JSON.parse(saved);
+        } catch (e) {
+          scheduleData = buildDefaultSchedule();
+        }
+      } else {
+        scheduleData = buildDefaultSchedule();
+      }
+    }
+
+    function saveSchedule() {
+      localStorage.setItem("team6_schedule_v1", JSON.stringify(scheduleData));
+    }
+
+    function switchView(viewName) {
+      currentView = viewName;
+      const kanbanView = document.getElementById("kanban-view");
+      const schedView = document.getElementById("schedule-view");
+      const btnKanban = document.getElementById("tab-btn-kanban");
+      const btnSched = document.getElementById("tab-btn-schedule");
+
+      if (viewName === "kanban") {
+        if (kanbanView) kanbanView.style.display = "block";
+        if (schedView) schedView.style.display = "none";
+        if (btnKanban) btnKanban.classList.add("active");
+        if (btnSched) btnSched.classList.remove("active");
+      } else {
+        if (kanbanView) kanbanView.style.display = "none";
+        if (schedView) schedView.style.display = "flex";
+        if (btnKanban) btnKanban.classList.remove("active");
+        if (btnSched) btnSched.classList.add("active");
+        renderScheduleTable();
+      }
+    }
+
+    function selectScheduleMember(member) {
+      selectedMember = member;
+      document.querySelectorAll(".member-btn").forEach(btn => {
+        btn.classList.remove("active", "active-all");
+      });
+      const activeBtn = document.getElementById(`mbtn-${member}`);
+      if (activeBtn) {
+        if (member === "all") {
+          activeBtn.classList.add("active-all");
+        } else {
+          activeBtn.classList.add("active");
+        }
+      }
+      renderScheduleTable();
+    }
+
+    function setActiveStatusTool(tool) {
+      activeStatusTool = tool;
+      document.querySelectorAll("[id^='stbtn-']").forEach(btn => btn.classList.remove("active"));
+      const activeBtn = document.getElementById(`stbtn-${tool}`);
+      if (activeBtn) activeBtn.classList.add("active");
+    }
+
+    function renderScheduleTable() {
+      if (!scheduleData) initSchedule();
+      const tbody = document.getElementById("schedule-tbody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      SCHED_TIMES.forEach(t => {
+        const tr = document.createElement("tr");
+
+        // Time header cell
+        const tdTime = document.createElement("td");
+        tdTime.className = "time-cell";
+        tdTime.innerHTML = `<div><strong>${t.label}</strong></div><div style="font-size:11px; opacity:0.75;">${t.name}</div>`;
+        tr.appendChild(tdTime);
+
+        // Day columns
+        SCHED_DAYS.forEach(d => {
+          const td = document.createElement("td");
+          const key = `${d.id}_${t.id}`;
+
+          if (selectedMember === "all") {
+            // Heatmap View
+            let freeCount = 0;
+            let lectureCount = 0;
+            const freeMembers = [];
+            const busyMembers = [];
+            let commonTitle = "";
+
+            TEAM_MEMBERS.forEach(m => {
+              const slot = scheduleData[m]?.[key] || { status: "free" };
+              if (slot.status === "free") {
+                freeCount++;
+                freeMembers.push(m);
+              } else if (slot.status === "lecture") {
+                lectureCount++;
+                commonTitle = slot.title || "Forelesning";
+              } else {
+                busyMembers.push(m);
+              }
+            });
+
+            const cellDiv = document.createElement("div");
+            let cellClass = "sched-cell";
+            let statusText = "";
+            let subText = "";
+
+            if (lectureCount >= 3) {
+              cellClass += " lecture";
+              statusText = `🎓 ${commonTitle || "Forelesning"}`;
+              subText = "Hele teamet opptatt";
+            } else if (freeCount === TEAM_MEMBERS.length) {
+              cellClass += " heatmap-perfect";
+              statusText = "🟢 5/5 Ledige (Fellesmøte!)";
+              subText = "Gulltid for Team 6";
+            } else if (freeCount >= 3) {
+              cellClass += " heatmap-good";
+              statusText = `🟡 ${freeCount}/5 Ledige`;
+              subText = `Ledig: ${freeMembers.join(", ")}`;
+            } else {
+              cellClass += " heatmap-low";
+              statusText = `🔴 ${freeCount}/5 Ledige`;
+              subText = busyMembers.length ? `Opptatt: ${busyMembers.join(", ")}` : "";
+            }
+
+            cellDiv.className = cellClass;
+            cellDiv.title = `Klikk for å endre tilgjengelighet for ${d.label} ${t.label}`;
+            cellDiv.onclick = () => handleHeatmapCellClick(d.id, t.id);
+
+            cellDiv.innerHTML = `
+              <div class="cell-title">
+                <span>${statusText}</span>
+              </div>
+              <div class="cell-sub">${subText}</div>
+              <div class="cell-members">
+                ${freeMembers.map(m => `<span class="member-tag" style="background:rgba(16,185,129,0.25); color:#6ee7b7;">${m}</span>`).join("")}
+              </div>
+            `;
+            td.appendChild(cellDiv);
+          } else {
+            // Individual Member View
+            const slot = scheduleData[selectedMember]?.[key] || { status: "free", title: "Ledig", note: "" };
+            const cellDiv = document.createElement("div");
+            cellDiv.className = `sched-cell ${slot.status || "free"}`;
+            cellDiv.title = `Klikk for å sette status som ${activeStatusTool}`;
+            cellDiv.onclick = () => handleMemberCellClick(selectedMember, d.id, t.id);
+
+            let statusIcon = "🟢";
+            if (slot.status === "busy") statusIcon = "🔴";
+            if (slot.status === "lecture") statusIcon = "🎓";
+            if (slot.status === "meeting") statusIcon = "👥";
+
+            cellDiv.innerHTML = `
+              <div class="cell-title">
+                <span>${statusIcon} ${slot.title || slot.status}</span>
+                <span style="font-size:10px; opacity:0.6;">✏️</span>
+              </div>
+              <div class="cell-sub">${slot.note || (slot.status === "free" ? "Tilgjengelig for møte" : "Ikke tilgjengelig")}</div>
+            `;
+            td.appendChild(cellDiv);
+          }
+
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function handleMemberCellClick(member, dayId, timeId) {
+      if (!scheduleData) initSchedule();
+      const key = `${dayId}_${timeId}`;
+      const current = scheduleData[member]?.[key] || { status: "free" };
+
+      // Hvis brukeren klikker igjen på samme status, la dem skrive et stikkord/notat
+      if (current.status === activeStatusTool) {
+        const note = prompt(`Skriv et valgfritt notat for ${member} (${dayId} ${timeId}):`, current.note || "");
+        if (note !== null) {
+          current.note = note.trim();
+        }
+      } else {
+        current.status = activeStatusTool;
+        if (activeStatusTool === "free") current.title = "Ledig";
+        if (activeStatusTool === "busy") current.title = "Opptatt";
+        if (activeStatusTool === "meeting") current.title = "Team-møte";
+        if (activeStatusTool === "lecture") current.title = "Forelesning";
+      }
+
+      if (!scheduleData[member]) scheduleData[member] = {};
+      scheduleData[member][key] = current;
+      saveSchedule();
+      renderScheduleTable();
+    }
+
+    function handleHeatmapCellClick(dayId, timeId) {
+      const choice = prompt(`Hvem vil du endre for denne timen (${dayId} ${timeId})?\nSkriv ett navn (f.eks. Olav, Camilla, Ingrid, Aki, Kristin) eller alle:`, "alle");
+      if (!choice) return;
+
+      const cleaned = choice.trim().toLowerCase();
+      if (cleaned === "alle") {
+        TEAM_MEMBERS.forEach(m => {
+          const key = `${dayId}_${timeId}`;
+          if (!scheduleData[m]) scheduleData[m] = {};
+          scheduleData[m][key] = {
+            status: activeStatusTool,
+            title: activeStatusTool === "free" ? "Ledig" : (activeStatusTool === "busy" ? "Opptatt" : "Team-møte"),
+            note: ""
+          };
+        });
+      } else {
+        const found = TEAM_MEMBERS.find(m => m.toLowerCase() === cleaned);
+        if (found) {
+          const key = `${dayId}_${timeId}`;
+          if (!scheduleData[found]) scheduleData[found] = {};
+          scheduleData[found][key] = {
+            status: activeStatusTool,
+            title: activeStatusTool === "free" ? "Ledig" : (activeStatusTool === "busy" ? "Opptatt" : "Team-møte"),
+            note: ""
+          };
+        } else {
+          alert(`Fant ikke medlem med navn: ${choice}. Velg mellom: ${TEAM_MEMBERS.join(", ")}`);
+          return;
+        }
+      }
+      saveSchedule();
+      renderScheduleTable();
+    }
+
+    function copyScheduleMarkdown() {
+      if (!scheduleData) initSchedule();
+      let md = "### 📅 Team 6 — Felles Ukeplan & Tilgjengelighet\n\n";
+      md += "| Tidspunkt | Mandag | Tirsdag | Onsdag | Torsdag | Fredag |\n";
+      md += "| :--- | :--- | :--- | :--- | :--- | :--- |\n";
+
+      SCHED_TIMES.forEach(t => {
+        let row = `| **${t.label}** `;
+        SCHED_DAYS.forEach(d => {
+          const key = `${d.id}_${t.id}`;
+          let freeCount = 0;
+          let lectureTitle = "";
+
+          TEAM_MEMBERS.forEach(m => {
+            const slot = scheduleData[m]?.[key] || { status: "free" };
+            if (slot.status === "free") freeCount++;
+            if (slot.status === "lecture") lectureTitle = slot.title;
+          });
+
+          if (lectureTitle) {
+            row += `| 🎓 ${lectureTitle} `;
+          } else if (freeCount === TEAM_MEMBERS.length) {
+            row += `| 🟢 **5/5 Ledige** `;
+          } else if (freeCount >= 3) {
+            row += `| 🟡 ${freeCount}/5 Ledige `;
+          } else {
+            row += `| 🔴 ${freeCount}/5 Ledige `;
+          }
+        });
+        row += "|\n";
+        md += row;
+      });
+
+      md += "\n*Generert fra Team 6 Deadlines & Operations Hub*\n";
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(md).then(() => {
+          alert("✅ Ukeplanen er kopiert som Markdown! Du kan nå lime den direkte inn i Notion eller Discord.");
+        }).catch(() => {
+          prompt("Kopier tabellen manuelt herfra:", md);
+        });
+      } else {
+        prompt("Kopier tabellen manuelt herfra:", md);
+      }
+    }
+
+    function resetSchedule() {
+      if (confirm("Vil du tilbakestille ukeplanen til faste UiO-forelesninger for hele Team 6?")) {
+        scheduleData = buildDefaultSchedule();
+        saveSchedule();
+        renderScheduleTable();
+      }
+    }
+
+    function exportScheduleJSON() {
+      if (!scheduleData) initSchedule();
+      const jsonStr = JSON.stringify(scheduleData, null, 2);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(jsonStr).then(() => {
+          alert("✅ Ukeplan-data (JSON) kopiert til utklippstavlen!");
+        });
+      } else {
+        prompt("Kopier JSON-data:", jsonStr);
+      }
+    }
+
+    function importScheduleJSON() {
+      const input = prompt("Lim inn Ukeplan JSON-data her:");
+      if (!input) return;
+      try {
+        const parsed = JSON.parse(input);
+        scheduleData = parsed;
+        saveSchedule();
+        renderScheduleTable();
+        alert("✅ Ukeplan importert med suksess!");
+      } catch (e) {
+        alert("❌ Ugyldig JSON-format: " + e.message);
+      }
+    }
+
     // Start
+    initSchedule();
     initData();
     renderBoard();
   </script>
