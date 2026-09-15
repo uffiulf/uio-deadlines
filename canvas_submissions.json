@@ -1,0 +1,105 @@
+{
+  "last_synced": "2026-09-15T21:16:21.053739+00:00",
+  "count": 9,
+  "submissions": {
+    "ent4000-2026-08-27-1200": {
+      "course": "ENT4000",
+      "card_id": "ent4000-2026-08-27-1200",
+      "card_title": "DEADLINE: Written Assignment (In-Class)",
+      "canvas_name": "Written Assignment - In Class 27th",
+      "status": "graded",
+      "submitted_at": "2026-08-28T05:46:10Z",
+      "grade": "1",
+      "score": 1.0,
+      "assignment_id": 159207
+    },
+    "ent4000-2026-09-02-2330": {
+      "course": "ENT4000",
+      "card_id": "ent4000-2026-09-02-2330",
+      "card_title": "DEADLINE: Mini Assignment 1",
+      "canvas_name": "Mini Assignment 1 - News Story",
+      "status": "graded",
+      "submitted_at": "2026-09-02T19:17:43Z",
+      "grade": "1",
+      "score": 1.0,
+      "assignment_id": 159211
+    },
+    "ent4000-2026-09-09-2330": {
+      "course": "ENT4000",
+      "card_id": "ent4000-2026-09-09-2330",
+      "card_title": "ENT4000 — Mini Assignment 2: SME Needfinding & Customer Interviews",
+      "canvas_name": "Mini Assignment 2 - Interview Report",
+      "status": "graded",
+      "submitted_at": "2026-09-09T12:10:05Z",
+      "grade": "1",
+      "score": 1.0,
+      "assignment_id": 159212
+    },
+    "ent4000-2026-09-16-2330": {
+      "course": "ENT4000",
+      "card_id": "ent4000-2026-09-16-2330",
+      "card_title": "DEADLINE: Mini Assignment 3",
+      "canvas_name": "Mini Assignment 3 - Summary of Week3 Needfinding Fieldwork",
+      "status": "submitted",
+      "submitted_at": "2026-09-15T15:35:32Z",
+      "grade": null,
+      "score": null,
+      "assignment_id": 159213
+    },
+    "ent4050-2026-09-09-1200": {
+      "course": "ENT4050",
+      "card_id": "ent4050-2026-09-09-1200",
+      "card_title": "ENT4050 — Gruppeoppgave 1: Team Charter",
+      "canvas_name": "Team charter",
+      "status": "submitted",
+      "submitted_at": "2026-09-09T12:14:31Z",
+      "grade": null,
+      "score": null,
+      "assignment_id": 159704
+    },
+    "ent4080-2026-09-01-0800": {
+      "course": "ENT4080",
+      "card_id": "ent4080-2026-09-01-0800",
+      "card_title": "DEADLINE: Assignment 1",
+      "canvas_name": "Assignment #1 – Issue Tree",
+      "status": "submitted",
+      "submitted_at": "2026-08-31T10:25:55Z",
+      "grade": null,
+      "score": null,
+      "assignment_id": 158263
+    },
+    "ent4080-2026-09-08-0800": {
+      "course": "ENT4080",
+      "card_id": "ent4080-2026-09-08-0800",
+      "card_title": "ENT4080 — Assignment #2: Market Attractiveness Analysis (PEV)",
+      "canvas_name": "Assignment #2 – Market Attractiveness Analysis",
+      "status": "submitted",
+      "submitted_at": "2026-09-07T17:16:49Z",
+      "grade": null,
+      "score": null,
+      "assignment_id": 158264
+    },
+    "ent4080-2026-09-15-0800": {
+      "course": "ENT4080",
+      "card_id": "ent4080-2026-09-15-0800",
+      "card_title": "DEADLINE: Assignment 3",
+      "canvas_name": "Assignment #3 – Industry- and Competitor Analysis ",
+      "status": "submitted",
+      "submitted_at": "2026-09-14T17:23:03Z",
+      "grade": null,
+      "score": null,
+      "assignment_id": 158265
+    },
+    "ent4230-2026-09-04-1200": {
+      "course": "ENT4230",
+      "card_id": "ent4230-2026-09-04-1200",
+      "card_title": "DEADLINE: Group Assignment 1",
+      "canvas_name": "Group Assignment #1 - Financial Statement Analyses",
+      "status": "submitted",
+      "submitted_at": "2026-09-02T13:53:48Z",
+      "grade": null,
+      "score": null,
+      "assignment_id": 158255
+    }
+  }
+}

@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Startup CFO Simulator & Formula Lab — ENT4230 UiO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            dark: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+          },
+          boxShadow: {
+            'glow-blue': '0 0 25px -5px rgba(59, 130, 246, 0.25)',
+            'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.25)',
+            'glow-purple': '0 0 25px -5px rgba(168, 85, 247, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    input[type=range] { 
+      accent-color: #3b82f6; 
+      height: 6px;
+      border-radius: 9999px;
+    }
+    .ratio-active { 
+      ring: 2px solid #3b82f6; 
+      background-color: rgba(59, 130, 246, 0.15) !important; 
+    }
+    .highlight-numerator { 
+      background-color: rgba(16, 185, 129, 0.25) !important; 
+      border-left: 3px solid #10b981 !important;
+      transition: all 0.3s ease; 
+    }
+    .highlight-denominator { 
+      background-color: rgba(245, 158, 11, 0.25) !important; 
+      border-left: 3px solid #f59e0b !important;
+      transition: all 0.3s ease; 
+    }
+
+    /* Custom Glassmorphism */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    /* Popover Tooltip with pure CSS & zero lag */
+    .has-popover {
+      position: relative;
+    }
+    .popover-box {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px) scale(0.97);
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(8px) scale(0.97);
+      z-index: 60;
+      width: 320px;
+      pointer-events: none;
+    }
+    .has-popover:hover .popover-box {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .has-popover:hover {
+      z-index: 55;
+    }
+    /* Arrow */
+    .popover-box::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: rgba(30, 41, 59, 0.95) transparent transparent transparent;
+    }
+  </style>
+</head>
+<body class="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950 text-slate-100 min-h-screen antialiased p-3 md:p-8 selection:bg-blue-600 selection:text-white">
+
+  <div class="max-w-6xl mx-auto space-y-6">
+    
+    <!-- Top Bar / App Banner -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+          </span>
+          UiO Master i Entreprenørskap • ENT4230 Finance Lab
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          Startup CFO Simulator & Formel-Lab
+        </h1>
+        <p class="text-slate-400 text-xs md:text-sm mt-1">Interaktiv finansiell modellering, balanse, arbeidskapital (NWC), verdsettelse og eksamenstrening.</p>
+      </div>
+      
+      <!-- Top Action & Navigation Tabs -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="openShareModal()" class="px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-emerald-950/40 hover:shadow-emerald-900/60 transition-all transform active:scale-95">
+          <span>📤</span> Del med teamet
+        </button>
+
+        <div class="flex flex-wrap gap-1 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 shadow-inner">
+          <button id="nav-pl" onclick="switchMainTab('pl')" class="nav-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold transition shadow-sm">1. P&L & Ratios</button>
+          <button id="nav-bs" onclick="switchMainTab('bs')" class="nav-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition">2. Balanse & NWC 💡</button>
+          <button id="nav-val" onclick="switchMainTab('val')" class="nav-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition">3. Valuation & Cap Table 🚀</button>
+          <button id="nav-quiz" onclick="switchMainTab('quiz')" class="nav-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition">4. Test #1 Quiz 🧠</button>
+          <button id="nav-hard" onclick="switchMainTab('hard')" class="nav-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition">5. Hardcore Eksamen ⚔️</button>
+          <button id="nav-slide" onclick="switchMainTab('slide')" class="nav-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition">6. Slide Deck 📊</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================================== -->
+    <!-- TAB 1: INCOME STATEMENT (P&L) & RATIOS                         -->
+    <!-- ============================================================== -->
+    <section id="sec-pl" class="space-y-6">
+      <!-- Sliders Panel -->
+      <div class="glass-panel rounded-2xl p-5 shadow-2xl border border-slate-800/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3 mb-4">
+          <div>
+            <h2 class="text-base md:text-lg font-bold flex items-center gap-2 text-white">
+              🕹️ Gründerens Spaker: SensorTech AS
+            </h2>
+            <p class="text-slate-400 text-xs">Juster volum, pris og kostnadsstruktur – se hvordan resultatregnskapet og nøkkeltallene endrer seg umiddelbart.</p>
+          </div>
+          <button onclick="resetSlidersPL()" class="text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 self-start sm:self-auto transition">Tilbakestill standard</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <!-- Sales Volume Q -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Sales Volume (Q)</label>
+              <span id="badge-q" class="text-xs font-bold text-emerald-400"></span>
+            </div>
+            <div class="text-xl font-black text-emerald-400 mb-1.5 font-mono"><span id="val-q">60</span> units</div>
+            <input type="range" id="input-q" min="0" max="150" step="1" value="60" oninput="runSimPL()" class="w-full">
+            <div class="text-[10px] text-slate-500 mt-1">Units sold per month (Antall solgt)</div>
+          </div>
+
+          <!-- Price P -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Unit Price (P)</label>
+            <div class="text-xl font-black text-blue-400 mb-1.5 font-mono"><span id="val-p">10,000</span> NOK</div>
+            <input type="range" id="input-p" min="5000" max="25000" step="500" value="10000" oninput="runSimPL()" class="w-full">
+            <div class="text-[10px] text-slate-500 mt-1">Selling price per unit (Utsalgspris)</div>
+          </div>
+
+          <!-- Variable Cost VC -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Variable Cost (VC)</label>
+            <div class="text-xl font-black text-amber-400 mb-1.5 font-mono"><span id="val-vc">4,000</span> NOK</div>
+            <input type="range" id="input-vc" min="1000" max="15000" step="500" value="4000" oninput="runSimPL()" class="w-full">
+            <div class="text-[10px] text-slate-500 mt-1">Direct parts & manufacturing / COGS</div>
+          </div>
+
+          <!-- Fixed Overhead FC -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Fixed Overhead (FC)</label>
+            <div class="text-xl font-black text-red-400 mb-1.5 font-mono"><span id="val-fc">300,000</span> NOK</div>
+            <input type="range" id="input-fc" min="50000" max="700000" step="25000" value="300000" oninput="runSimPL()" class="w-full">
+            <div class="text-[10px] text-slate-500 mt-1">Office rent, base salaries, licenses</div>
+          </div>
+
+          <!-- Interest / Debt Rate -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Interest Expense (Rente)</label>
+            <div class="text-xl font-black text-purple-400 mb-1.5 font-mono"><span id="val-interest">20,000</span> NOK</div>
+            <input type="range" id="input-interest" min="0" max="80000" step="5000" value="20000" oninput="runSimPL()" class="w-full">
+            <div class="text-[10px] text-slate-500 mt-1">Coupon paid to bondholders / debt</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-Column Layout: Income Statement (Left) + Interactive Ratios (Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- LEFT: Real Income Statement (P&L) Table -->
+        <div class="lg:col-span-7 glass-panel rounded-2xl p-5 shadow-2xl flex flex-col justify-between border border-slate-800/80">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-3">
+              <div>
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                  📑 Income Statement (Resultatregnskap / P&L)
+                </h3>
+                <span class="text-[11px] text-slate-400">Monthly Pro Forma Statement for SensorTech AS</span>
+              </div>
+              <span class="text-xs bg-slate-800/80 border border-slate-700 text-slate-300 px-2.5 py-1 rounded-md font-mono">Month 1</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs md:text-sm text-left border-collapse">
+                <tbody>
+                  <!-- Revenue -->
+                  <tr id="row-revenue" class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
+                    <td class="py-2.5 px-3 font-semibold text-slate-200">
+                      <div class="flex items-center gap-1.5">
+                        <span>Net Sales / Revenue</span>
+                        <span class="text-[11px] text-slate-400 font-normal">(Salgsinntekter)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-slate-500 font-mono">P × Q = (<span id="txt-calc-rev">10k × 60</span>)</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono font-bold text-emerald-400" id="pl-revenue">600,000 NOK</td>
+                  </tr>
+
+                  <!-- COGS -->
+                  <tr id="row-cogs" class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
+                    <td class="py-2.5 px-3 font-medium text-slate-300 pl-6">
+                      <div class="flex items-center gap-1.5">
+                        <span>- Cost of Goods Sold / COGS</span>
+                        <span class="text-[11px] text-slate-400 font-normal">(Varekostnad)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-slate-500 font-mono">VC × Q = (<span id="txt-calc-cogs">4k × 60</span>)</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono text-amber-400" id="pl-cogs">-240,000 NOK</td>
+                  </tr>
+
+                  <!-- Gross Profit -->
+                  <tr id="row-grossprofit" class="border-b-2 border-slate-700 bg-slate-800/30 hover:bg-slate-800/50 transition">
+                    <td class="py-2.5 px-3 font-bold text-slate-100">
+                      <div class="flex items-center gap-1.5">
+                        <span>= Gross Profit / Contribution Margin</span>
+                        <span class="text-[11px] text-slate-400 font-normal">(Bruttofortjeneste / Dekningsbidrag)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-slate-400">Revenue - COGS</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono font-black text-blue-400" id="pl-grossprofit">360,000 NOK</td>
+                  </tr>
+
+                  <!-- Overhead -->
+                  <tr id="row-overhead" class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
+                    <td class="py-2.5 px-3 font-medium text-slate-300 pl-6">
+                      <div class="flex items-center gap-1.5">
+                        <span>- Fixed Overhead / SG&A Expenses</span>
+                        <span class="text-[11px] text-slate-400 font-normal">(Faste driftskostnader)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-slate-500">Fixed operational expenses (rent, executive salaries, IT)</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono text-red-400" id="pl-overhead">-300,000 NOK</td>
+                  </tr>
+
+                  <!-- Operating Income / EBIT -->
+                  <tr id="row-ebit" class="border-b-2 border-slate-700 bg-slate-800/40 hover:bg-slate-800/60 transition">
+                    <td class="py-2.5 px-3 font-bold text-slate-100">
+                      <div class="flex items-center gap-1.5">
+                        <span>= Operating Income / EBIT</span>
+                        <span class="text-[11px] text-slate-400 font-normal">(Driftsresultat)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-slate-400">Gross Profit - Overhead</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono font-black" id="pl-ebit">60,000 NOK</td>
+                  </tr>
+
+                  <!-- Interest Expense -->
+                  <tr id="row-interest" class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
+                    <td class="py-2.5 px-3 font-medium text-slate-300 pl-6">
+                      <div class="flex items-center gap-1.5">
+                        <span>- Interest Expense / Financial Costs</span>
+                        <span class="text-[11px] text-slate-400 font-normal">(Finanskostnader / Renter)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-slate-500">Coupon interest paid to bondholders</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono text-purple-400" id="pl-interest">-20,000 NOK</td>
+                  </tr>
+
+                  <!-- EBT -->
+                  <tr id="row-ebt" class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
+                    <td class="py-2 px-3 font-semibold text-slate-200 pl-6">
+                      <span>Earnings Before Tax / EBT (Resultat før skatt)</span>
+                    </td>
+                    <td class="py-2 px-3 text-right font-mono text-slate-200" id="pl-ebt">40,000 NOK</td>
+                  </tr>
+
+                  <!-- Tax -->
+                  <tr id="row-tax" class="border-b border-slate-800/60 hover:bg-slate-800/40 transition">
+                    <td class="py-2 px-3 font-medium text-slate-400 pl-6">
+                      <span>- Corporate Tax (22 % skatt)</span>
+                    </td>
+                    <td class="py-2 px-3 text-right font-mono text-slate-400" id="pl-tax">-8,800 NOK</td>
+                  </tr>
+
+                  <!-- Net Income -->
+                  <tr id="row-netincome" class="border-t-2 border-b-2 border-blue-500 bg-blue-950/20 hover:bg-blue-950/40 transition">
+                    <td class="py-3 px-3 font-black text-white">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-sm md:text-base">Net Income / Profit</span>
+                        <span class="text-xs text-blue-300 font-normal">(Årsresultat / Bunnlinjen)</span>
+                      </div>
+                      <span class="block text-[10px] font-normal text-blue-300">The "Bottom Line" available for shareholders</span>
+                    </td>
+                    <td class="py-3 px-3 text-right font-mono font-black text-sm md:text-base" id="pl-netincome">31,200 NOK</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+            <span>💡 <em>Klikk på et nøkkeltall til høyre for å fargelegge formellinjene!</em></span>
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-500 shadow-sm shadow-emerald-500/50"></span> Teller (Numerator)</span>
+              <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-amber-500 shadow-sm shadow-amber-500/50"></span> Nevner (Denominator)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Interactive Ratio Analysis -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="glass-panel rounded-2xl p-5 shadow-2xl border border-slate-800/80">
+            <h3 class="text-base font-bold text-white mb-1 flex items-center gap-2">
+              📈 Financial Ratios Dashboard (Nøkkeltall)
+            </h3>
+            <p class="text-slate-400 text-xs mb-3">Klikk på et kort for å dissekere formelen i resultatregnskapet:</p>
+
+            <div class="space-y-2.5">
+              <div onclick="inspectRatio('gpm')" id="card-gpm" class="ratio-card p-3 rounded-xl border border-slate-800 glass-card cursor-pointer hover:border-slate-700 transition">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200">1. Gross Profit Margin <span class="text-[10px] font-normal text-slate-400">(Bruttomargin)</span></span>
+                  <span class="text-sm font-black text-blue-400 font-mono" id="ratio-gpm">60.0 %</span>
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono">Gross Profit / Revenue</div>
+              </div>
+
+              <div onclick="inspectRatio('opm')" id="card-opm" class="ratio-card p-3 rounded-xl border border-slate-800 glass-card cursor-pointer hover:border-slate-700 transition">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200">2. Operating Margin / EBIT Margin <span class="text-[10px] font-normal text-slate-400">(Driftsmargin)</span></span>
+                  <span class="text-sm font-black text-emerald-400 font-mono" id="ratio-opm">10.0 %</span>
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono">Operating Income (EBIT) / Revenue</div>
+              </div>
+
+              <div onclick="inspectRatio('npm')" id="card-npm" class="ratio-card p-3 rounded-xl border border-slate-800 glass-card cursor-pointer hover:border-slate-700 transition">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200">3. Net Profit Margin <span class="text-[10px] font-normal text-slate-400">(Nettoresultatmargin)</span></span>
+                  <span class="text-sm font-black text-purple-400 font-mono" id="ratio-npm">5.2 %</span>
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono">Net Income / Revenue</div>
+              </div>
+
+              <div onclick="inspectRatio('bep')" id="card-bep" class="ratio-card p-3 rounded-xl border border-slate-800 glass-card cursor-pointer hover:border-slate-700 transition">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200">4. Break-Even Point (BEP) <span class="text-[10px] font-normal text-slate-400">(Nullpunkt)</span></span>
+                  <span class="text-sm font-black text-amber-400 font-mono" id="ratio-bep">50 units</span>
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono">Fixed Costs (FC) / (P - VC)</div>
+                <div class="text-[10px] text-slate-500">In Revenue: <span id="ratio-bep-rev" class="text-slate-300 font-bold font-mono">500,000 NOK</span></div>
+              </div>
+
+              <div onclick="inspectRatio('dol')" id="card-dol" class="ratio-card p-3 rounded-xl border border-slate-800 glass-card cursor-pointer hover:border-slate-700 transition">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200">5. Degree of Operating Leverage (DOL) <span class="text-[10px] font-normal text-slate-400">(Giring)</span></span>
+                  <span class="text-sm font-black text-cyan-400 font-mono" id="ratio-dol">6.0x</span>
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono">Gross Profit / EBIT</div>
+                <div class="text-[10px] text-slate-500">Øker salget 10 %, øker EBIT med <span id="txt-dol-sens" class="text-cyan-300 font-bold font-mono">60 %</span>!</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-blue-950/20 border border-blue-900/40 rounded-2xl p-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-1" id="inspector-title">Formula Inspector</h4>
+            <div class="text-xs text-slate-300 font-mono bg-slate-950/80 p-2.5 rounded-lg border border-slate-800 mb-2" id="inspector-math">
+              Klikk på et nøkkeltall over for å dissekere regnestykket.
+            </div>
+            <div class="text-[11px] text-slate-400 leading-relaxed" id="inspector-explanation">
+              Dette verktøyet viser nøyaktig hvilke poster i årsrapporten Falck henter tallene fra på eksamen.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 2: BALANCE SHEET & WORKING CAPITAL (RICH HOVER TOOLTIPS)  -->
+    <!-- ============================================================== -->
+    <section id="sec-bs" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-slate-800/80 space-y-6">
+        
+        <!-- Header Banner -->
+        <div class="border-b border-slate-800/80 pb-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-mono tracking-widest text-amber-400 uppercase font-bold">TOPIC 4 • WORKING CAPITAL MANAGEMENT</span>
+              <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                🏦 Balance Sheet & Cash Conversion Cycle (NWC & Likviditet)
+              </h2>
+              <p class="text-slate-400 text-xs mt-1">
+                💡 <strong class="text-slate-200">Hold musepekeren over (eller klikk på)</strong> begrepene som DSO, DIO, DPO, NWC og regnskapspostene for å få opp forklaring og formel!
+              </p>
+            </div>
+            <span class="text-xs bg-amber-500/10 border border-amber-500/20 text-amber-400 px-3 py-1 rounded-full font-bold self-start sm:self-auto">
+              Vanskelighetsgrad: Medium-High
+            </span>
+          </div>
+        </div>
+
+        <!-- 3 Sliders with Rich Hover Tooltips -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          
+          <!-- DSO Slider Card -->
+          <div class="glass-card p-4 rounded-xl relative has-popover cursor-pointer" onclick="showTermInInspector('dso')">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <span>DSO: Days Sales Outstanding</span>
+                <span class="text-amber-400 text-xs">ℹ️</span>
+              </span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">Kunder</span>
+            </div>
+            <div class="text-2xl font-black text-amber-400 mb-1 font-mono"><span id="val-dso">60</span> dager</div>
+            <input type="range" id="input-dso" min="0" max="90" step="5" value="60" oninput="runSimBS()" class="w-full">
+            <span class="text-[10px] text-slate-500 block mt-1">Kredittid kunden somler med å betale</span>
+
+            <!-- Rich Popover Tooltip -->
+            <div class="popover-box bg-slate-900 border border-amber-500/40 rounded-xl p-3.5 shadow-2xl space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Kundefordringsdager</span>
+                <span class="text-[10px] font-mono text-slate-400">DSO</span>
+              </div>
+              <div class="text-xs font-bold text-white">DSO (Days Sales Outstanding)</div>
+              <div class="text-[11px] text-slate-300 font-mono bg-slate-950 p-1.5 rounded border border-slate-800">
+                Formel: (Kundefordringer / Kredittsalg) × 365
+              </div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Hvor mange dager det i gjennomsnitt tar fra du sender fakturaen til kunden faktisk betaler.
+              </p>
+              <div class="text-[10px] text-amber-300/90 bg-amber-950/30 p-1.5 rounded border border-amber-900/40">
+                ⚠️ <strong>Hvorfor Falck bryr seg:</strong> Høy DSO er gründernes dødsfelle. Salget ditt ser bra ut på papiret, men pengene dine er låst hos kunden!
+              </div>
+            </div>
+          </div>
+
+          <!-- DIO Slider Card -->
+          <div class="glass-card p-4 rounded-xl relative has-popover cursor-pointer" onclick="showTermInInspector('dio')">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <span>DIO: Days Inventory Outstanding</span>
+                <span class="text-blue-400 text-xs">ℹ️</span>
+              </span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">Lager</span>
+            </div>
+            <div class="text-2xl font-black text-blue-400 mb-1 font-mono"><span id="val-dio">45</span> dager</div>
+            <input type="range" id="input-dio" min="10" max="90" step="5" value="45" oninput="runSimBS()" class="w-full">
+            <span class="text-[10px] text-slate-500 block mt-1">Hvor lenge deler/sensorer ligger på lager</span>
+
+            <!-- Rich Popover Tooltip -->
+            <div class="popover-box bg-slate-900 border border-blue-500/40 rounded-xl p-3.5 shadow-2xl space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Varelagerdager</span>
+                <span class="text-[10px] font-mono text-slate-400">DIO</span>
+              </div>
+              <div class="text-xs font-bold text-white">DIO (Days Inventory Outstanding)</div>
+              <div class="text-[11px] text-slate-300 font-mono bg-slate-950 p-1.5 rounded border border-slate-800">
+                Formel: (Varelager / COGS) × 365
+              </div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Gjennomsnittlig antall dager råvarer og ferdigvarer ligger og støver ned på lageret før de blir solgt.
+              </p>
+              <div class="text-[10px] text-blue-300/90 bg-blue-950/30 p-1.5 rounded border border-blue-900/40">
+                💡 <strong>Mål for gründeren:</strong> Få DIO så lav som mulig (Just-In-Time) for å unngå at tusenvis av kroner ligger bundet i komponenter.
+              </div>
+            </div>
+          </div>
+
+          <!-- DPO Slider Card -->
+          <div class="glass-card p-4 rounded-xl relative has-popover cursor-pointer" onclick="showTermInInspector('dpo')">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <span>DPO: Days Payable Outstanding</span>
+                <span class="text-emerald-400 text-xs">ℹ️</span>
+              </span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">Fabrikk</span>
+            </div>
+            <div class="text-2xl font-black text-emerald-400 mb-1 font-mono"><span id="val-dpo">30</span> dager</div>
+            <input type="range" id="input-dpo" min="10" max="60" step="5" value="30" oninput="runSimBS()" class="w-full">
+            <span class="text-[10px] text-slate-500 block mt-1">Kredittid du får fra leverandøren</span>
+
+            <!-- Rich Popover Tooltip -->
+            <div class="popover-box bg-slate-900 border border-emerald-500/40 rounded-xl p-3.5 shadow-2xl space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Leverandørgjeldsdager</span>
+                <span class="text-[10px] font-mono text-slate-400">DPO</span>
+              </div>
+              <div class="text-xs font-bold text-white">DPO (Days Payable Outstanding)</div>
+              <div class="text-[11px] text-slate-300 font-mono bg-slate-950 p-1.5 rounded border border-slate-800">
+                Formel: (Leverandørgjeld / Vareinnkjøp) × 365
+              </div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Hvor mange dager du får lov til å vente med å betale fabrikken eller underleverandøren din.
+              </p>
+              <div class="text-[10px] text-emerald-300/90 bg-emerald-950/30 p-1.5 rounded border border-emerald-900/40">
+                🎯 <strong>Gründer-triks:</strong> Høy DPO fungerer som et gratis rentefritt lån fra leverandøren din!
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3 Big Metric Cards with Rich Hover Tooltips -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          
+          <!-- CCC Metric Box -->
+          <div class="glass-card p-5 rounded-xl relative has-popover cursor-pointer" onclick="showTermInInspector('ccc')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs uppercase font-bold text-slate-400 flex items-center gap-1.5">
+                <span>Cash Conversion Cycle (CCC)</span>
+                <span class="text-blue-400">ℹ️</span>
+              </span>
+              <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono font-bold">Dager</span>
+            </div>
+            <div class="text-3xl font-black text-white mt-2 font-mono" id="res-ccc">75 dager</div>
+            <div class="text-xs text-slate-400 mt-1 font-mono">Formel: DIO + DSO - DPO</div>
+            <div class="text-[11px] text-slate-500 mt-2">Dager pengene dine er "låst i luften" og krever arbeidskapital fra banken.</div>
+
+            <!-- Tooltip -->
+            <div class="popover-box bg-slate-900 border border-blue-500/40 rounded-xl p-3.5 shadow-2xl space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Kontantomløpssyklus</span>
+                <span class="text-[10px] font-mono text-slate-400">CCC</span>
+              </div>
+              <div class="text-xs font-bold text-white">Cash Conversion Cycle (CCC)</div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Tidsrommet fra du betaler kontanter ut til fabrikken for råvarer, til du mottar kontanter inn fra kunden.
+              </p>
+              <div class="text-[10px] text-blue-300/90 bg-blue-950/30 p-1.5 rounded border border-blue-900/40">
+                ⭐ <strong>Målet:</strong> Få CCC så nær 0 som mulig (eller negativ, som Dell og Amazon). Da finansierer leverandørene og kundene veksten din!
+              </div>
+            </div>
+          </div>
+
+          <!-- NWC Metric Box -->
+          <div class="glass-card p-5 rounded-xl relative has-popover cursor-pointer" onclick="showTermInInspector('nwc')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs uppercase font-bold text-slate-400 flex items-center gap-1.5">
+                <span>Net Working Capital (NWC)</span>
+                <span class="text-amber-400">ℹ️</span>
+              </span>
+              <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono font-bold">NOK</span>
+            </div>
+            <div class="text-3xl font-black text-amber-400 mt-2 font-mono" id="res-nwc">450,000 NOK</div>
+            <div class="text-xs text-slate-400 mt-1 font-mono">Current Assets - Current Liabilities</div>
+            <div class="text-[11px] text-slate-500 mt-2">Drivstofftanken som må finansieres med egenkapital eller kassakreditt.</div>
+
+            <!-- Tooltip -->
+            <div class="popover-box bg-slate-900 border border-amber-500/40 rounded-xl p-3.5 shadow-2xl space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Netto Arbeidskapital</span>
+                <span class="text-[10px] font-mono text-slate-400">NWC</span>
+              </div>
+              <div class="text-xs font-bold text-white">Net Working Capital (NWC)</div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Differansen mellom kortsiktige eiendeler (bank, kundefordringer, varelager) og kortsiktig gjeld (regninger du skylder nå).
+              </p>
+              <div class="text-[10px] text-amber-300/90 bg-amber-950/30 p-1.5 rounded border border-amber-900/40">
+                💰 <strong>Hva det betyr:</strong> Dette er den likvide kapitalen selskapet må ha i bakhånd for å sikre at hjulene går rundt fra dag til dag.
+              </div>
+            </div>
+          </div>
+
+          <!-- Liquidity Ratios Box -->
+          <div class="glass-card p-5 rounded-xl relative has-popover cursor-pointer" onclick="showTermInInspector('liquidity')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs uppercase font-bold text-slate-400 flex items-center gap-1.5">
+                <span>Current & Quick Ratio</span>
+                <span class="text-emerald-400">ℹ️</span>
+              </span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono font-bold">Likviditet</span>
+            </div>
+            <div class="text-xl font-bold text-slate-200 mt-2 font-mono">Current Ratio: <span id="res-cr" class="text-emerald-400 font-black">2.1x</span></div>
+            <div class="text-xl font-bold text-slate-200 mt-1 font-mono">Quick Ratio: <span id="res-qr" class="text-blue-400 font-black">1.3x</span></div>
+            <div class="text-[11px] text-slate-500 mt-2">Quick Ratio trekker fra varelageret fordi det tar tid å selge i en krise.</div>
+
+            <!-- Tooltip -->
+            <div class="popover-box bg-slate-900 border border-emerald-500/40 rounded-xl p-3.5 shadow-2xl space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Likviditetsgrader</span>
+                <span class="text-[10px] font-mono text-slate-400">CR & QR</span>
+              </div>
+              <div class="text-xs font-bold text-white">Current Ratio vs. Quick Ratio (Acid Test)</div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                • <strong>Current Ratio (Likviditetsgrad 1):</strong> Current Assets / Current Liabilities. Bør være over 1.5 - 2.0.<br>
+                • <strong>Quick Ratio (Likviditetsgrad 2):</strong> (Current Assets - Varelager) / Current Liabilities.
+              </p>
+              <div class="text-[10px] text-emerald-300/90 bg-emerald-950/30 p-1.5 rounded border border-emerald-900/40">
+                🚨 <strong>Eksamenspoeng:</strong> Hvis Current Ratio er over 1.5, men Quick Ratio er under 0.8, er selskapet sårbart fordi pengene er låst i usolgte varer!
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Balance Sheet Visualization Table -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-800/80">
+          
+          <!-- Assets (Eiendeler) -->
+          <div class="glass-card p-4 rounded-xl space-y-3">
+            <h4 class="text-sm font-bold text-emerald-400 border-b border-slate-800 pb-2 flex items-center justify-between">
+              <span>🟢 ASSETS (Eiendeler)</span>
+              <span class="text-[10px] text-slate-400 font-normal">Hva bedriften eier</span>
+            </h4>
+            <div class="space-y-2 text-xs">
+              
+              <div class="flex justify-between py-1 border-b border-slate-800/60 font-semibold text-slate-300 has-popover cursor-pointer" onclick="showTermInInspector('ca')">
+                <span class="flex items-center gap-1">Current Assets (Omløpsmidler) <span class="text-[10px] text-emerald-400">ℹ️</span></span>
+                <span id="bs-ca" class="font-mono text-emerald-400">850,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-emerald-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Current Assets (Omløpsmidler)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Eiendeler som forventes omgjort til kontanter innen 12 måneder (Bank, Kundefordringer, Varelager).</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between pl-4 text-slate-400 has-popover cursor-pointer" onclick="showTermInInspector('cash')">
+                <span class="flex items-center gap-1">• Cash & Equivalents (Bankinnskudd) <span class="text-[10px] text-slate-500">ℹ️</span></span>
+                <span id="bs-cash" class="font-mono text-slate-200">200,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-slate-700 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Cash & Cash Equivalents</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Rene penger på brukskonto og kortsiktige rentepapirer som kan brukes umiddelbart til å betale regninger.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between pl-4 text-slate-400 has-popover cursor-pointer" onclick="showTermInInspector('ar')">
+                <span class="flex items-center gap-1">• Accounts Receivable / AR (Kundefordringer) <span class="text-[10px] text-amber-400">ℹ️</span></span>
+                <span id="bs-ar" class="font-mono text-amber-400">400,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-amber-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Accounts Receivable (AR)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Penger kundene skylder deg for varer du allerede har levert på faktura. Høy AR betyr at kundene somler med betalingen.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between pl-4 text-slate-400 has-popover cursor-pointer" onclick="showTermInInspector('inv')">
+                <span class="flex items-center gap-1">• Inventory (Varelager) <span class="text-[10px] text-blue-400">ℹ️</span></span>
+                <span id="bs-inv" class="font-mono text-blue-400">250,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-blue-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Inventory (Varelager)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Verdien av råvarer, varer under tilvirkning og ferdige sensorer på hylla. Binder opp verdifull likviditet.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between py-1 border-b border-slate-800/60 font-semibold text-slate-300 pt-2 has-popover cursor-pointer" onclick="showTermInInspector('fa')">
+                <span class="flex items-center gap-1">Fixed Assets (Anleggsmidler - Fabrikk/Utstyr) <span class="text-[10px] text-slate-500">ℹ️</span></span>
+                <span class="font-mono text-slate-400">500,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-slate-700 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Fixed Assets (Anleggsmidler)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Varige eiendeler ment for langvarig eie og bruk (maskiner, lokaler, patenter). Kan ikke selges raskt for å betale lønn.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between py-2 text-sm font-black text-white border-t border-slate-700">
+                <span>TOTAL ASSETS (Sum Eiendeler):</span>
+                <span id="bs-total-assets" class="font-mono text-emerald-400">1,350,000 NOK</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Liabilities & Equity (Gjeld og Egenkapital) -->
+          <div class="glass-card p-4 rounded-xl space-y-3">
+            <h4 class="text-sm font-bold text-amber-400 border-b border-slate-800 pb-2 flex items-center justify-between">
+              <span>🟡 LIABILITIES & EQUITY (Gjeld & Egenkapital)</span>
+              <span class="text-[10px] text-slate-400 font-normal">Hvordan eiendelene er finansiert</span>
+            </h4>
+            <div class="space-y-2 text-xs">
+              
+              <div class="flex justify-between py-1 border-b border-slate-800/60 font-semibold text-slate-300 has-popover cursor-pointer" onclick="showTermInInspector('cl')">
+                <span class="flex items-center gap-1">Current Liabilities (Kortsiktig gjeld) <span class="text-[10px] text-amber-400">ℹ️</span></span>
+                <span id="bs-cl" class="font-mono text-amber-400">400,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-amber-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Current Liabilities (Kortsiktig gjeld)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Gjeld og regninger som forfaller til betaling innen de neste 12 månedene (Leverandørgjeld, skyldig skatt, kassakreditt).</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between pl-4 text-slate-400 has-popover cursor-pointer" onclick="showTermInInspector('ap')">
+                <span class="flex items-center gap-1">• Accounts Payable / AP (Leverandørgjeld) <span class="text-[10px] text-emerald-400">ℹ️</span></span>
+                <span id="bs-ap" class="font-mono text-slate-200">250,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-emerald-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Accounts Payable (AP)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Regninger du skylder fabrikken og underleverandørene for deler du allerede har mottatt på kreditt.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between pl-4 text-slate-400 has-popover cursor-pointer" onclick="showTermInInspector('stdebt')">
+                <span class="flex items-center gap-1">• Short-Term Debt / Kassakreditt <span class="text-[10px] text-slate-500">ℹ️</span></span>
+                <span id="bs-stdebt" class="font-mono text-slate-400">150,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-slate-700 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Short-Term Debt (Kortsiktig banklån)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Kortsiktige banklån eller overtrukket kassakreditt for å tette akutte likviditetsgap.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between py-1 border-b border-slate-800/60 font-semibold text-slate-300 pt-2 has-popover cursor-pointer" onclick="showTermInInspector('bonds')">
+                <span class="flex items-center gap-1">Long-Term Debt / Bonds (Langsiktig gjeld) <span class="text-[10px] text-purple-400">ℹ️</span></span>
+                <span class="font-mono text-purple-400">400,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-purple-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Long-Term Debt & Bonds (Obligasjoner)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Langsiktig lån eller obligasjonslån fra bondholders med forfall om mer enn ett år. Krever faste kupongrentebetalinger.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between py-1 border-b border-slate-800/60 font-semibold text-slate-300 pt-1 has-popover cursor-pointer" onclick="showTermInInspector('equity')">
+                <span class="flex items-center gap-1">Shareholder's Equity (Egenkapital) <span class="text-[10px] text-blue-400">ℹ️</span></span>
+                <span id="bs-equity" class="font-mono text-blue-400">550,000 NOK</span>
+                <div class="popover-box bg-slate-900 border border-blue-500/40 rounded-xl p-3 text-left">
+                  <div class="font-bold text-white text-xs mb-1">Shareholders' Equity (Egenkapital)</div>
+                  <p class="text-[11px] text-slate-300 leading-snug">Eiernes penger i selskapet: Innskutt aksjekapital pluss tilbakeholdt overskudd fra tidligere år. Alltid lik Total Assets minus Total Gjeld.</p>
+                </div>
+              </div>
+
+              <div class="flex justify-between py-2 text-sm font-black text-white border-t border-slate-700">
+                <span>SUM GJELD & EGENKAPITAL:</span>
+                <span id="bs-total-liab" class="font-mono text-amber-400">1,350,000 NOK</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sticky Concept Inspector at the bottom (Great for click & mobile) -->
+        <div id="term-inspector-card" class="bg-slate-950/90 border border-blue-500/30 rounded-2xl p-4 shadow-xl flex items-start gap-4">
+          <div class="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xl text-blue-400 flex-shrink-0">
+            📖
+          </div>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider" id="term-insp-title">Live Begreps-Inspektør (Klikk eller hold musepeker)</h4>
+              <span id="term-insp-badge" class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold">Aktiv</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed" id="term-insp-desc">
+              Klikk på et hvilket som helst nøkkeltall eller regnskapspost ovenfor (DSO, DIO, DPO, CCC, NWC, Accounts Receivable, Inventory) for å låse forklaringen og formelen her!
+            </p>
+            <div class="text-[11px] text-blue-400 font-mono pt-1" id="term-insp-formula">
+              Formel: N/A
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 3: VENTURE VALUATION & CAP TABLE (TOPIC 7 & 8)            -->
+    <!-- ============================================================== -->
+    <section id="sec-val" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-slate-800/80">
+        <div class="border-b border-slate-800 pb-3 mb-4">
+          <h2 class="text-lg font-bold flex items-center gap-2">🚀 Venture Valuation & Cap Table Simulator (Topic 7 & 8)</h2>
+          <p class="text-slate-400 text-xs">Pre-Money vs. Post-Money Valuation, Founder Dilution, and Revenue Multiples (MNOK).</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+          <div class="glass-card p-4 rounded-xl">
+            <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Pre-Money Valuation</label>
+            <div class="text-2xl font-black text-blue-400 mb-1 font-mono"><span id="val-pre">20</span> MNOK</div>
+            <input type="range" id="input-pre" min="5" max="100" step="5" value="20" oninput="runSimVal()" class="w-full">
+            <span class="text-[10px] text-slate-500">Agreed enterprise value before new cash.</span>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl">
+            <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">New Investment (Cash In)</label>
+            <div class="text-2xl font-black text-emerald-400 mb-1 font-mono"><span id="val-inv">5</span> MNOK</div>
+            <input type="range" id="input-inv" min="1" max="30" step="1" value="5" oninput="runSimVal()" class="w-full">
+            <span class="text-[10px] text-slate-500">Fresh capital injected into the company.</span>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl">
+            <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Annual Revenue / ARR</label>
+            <div class="text-2xl font-black text-purple-400 mb-1 font-mono"><span id="val-arr">4.0</span> MNOK</div>
+            <input type="range" id="input-arr" min="0.5" max="20" step="0.5" value="4.0" oninput="runSimVal()" class="w-full">
+            <span class="text-[10px] text-slate-500">Annual top line for valuation multiple benchmarking.</span>
+          </div>
+        </div>
+
+        <!-- Cap Table Output Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-xs uppercase font-semibold text-slate-400">Post-Money Valuation</div>
+            <div class="text-2xl font-black text-white mt-1 font-mono" id="res-post">25 MNOK</div>
+            <div class="text-[11px] text-slate-500 mt-1">Pre-Money + Investment</div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-xs uppercase font-semibold text-slate-400">Investor Ownership %</div>
+            <div class="text-2xl font-black text-emerald-400 mt-1 font-mono" id="res-inv-pct">20.0 %</div>
+            <div class="text-[11px] text-slate-500 mt-1">Investment / Post-Money</div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-xs uppercase font-semibold text-slate-400">Founder Ownership % (Olav)</div>
+            <div class="text-2xl font-black text-blue-400 mt-1 font-mono" id="res-founder-pct">80.0 %</div>
+            <div class="text-[11px] text-slate-500 mt-1">100% - Investor % (Dilution: -20%)</div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-xs uppercase font-semibold text-slate-400">Implied Revenue Multiple</div>
+            <div class="text-2xl font-black text-purple-400 mt-1 font-mono" id="res-multiple">6.3x ARR</div>
+            <div class="text-[11px] text-slate-500 mt-1">Post-Money / Annual Revenue</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl text-xs space-y-2 text-slate-300">
+          <div class="font-bold text-blue-400 text-sm">💡 Falck's Cardinal Rule on Founder Dilution (Utvanning):</div>
+          <p>Never obsess solely over percentage ownership. <strong>80% of a company valued at 25 MNOK (20 MNOK value)</strong> is exponentially superior to <strong>100% of a company valued at 0 NOK</strong> that died of working capital starvation in Month 3!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 4: TEST #1 MASTER QUIZ (15 QUESTIONS, BALANCED A/B/C/D)    -->
+    <!-- ============================================================== -->
+    <section id="sec-quiz" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-slate-800/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold flex items-center gap-2">🧠 Falck's Exam Prep (Test #1 Master Edition)</h2>
+            <p class="text-slate-400 text-xs mt-0.5">15 realistic exam questions with English terminology first and balanced answer distribution (A, B, C, D).</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="resetQuiz()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded border border-slate-700">Restart Quiz</button>
+            <div class="text-sm font-bold bg-blue-500/20 text-blue-400 px-3.5 py-1.5 rounded-full border border-blue-500/30">
+              Score: <span id="quiz-score">0</span> / <span id="quiz-total">15</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="quiz-container" class="space-y-4"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 5: HARDCORE EXAM CASES (ADVANCED CALCULATIONS)             -->
+    <!-- ============================================================== -->
+    <section id="sec-hard" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-slate-800/80">
+        <div class="border-b border-slate-800 pb-4 mb-6">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-red-500/10 border border-red-500/20 text-red-400 text-[11px] font-bold uppercase mb-2">
+            ⚔️ Hardcore Mode — Grade A Level
+          </div>
+          <h2 class="text-xl font-black text-white">Multi-Step Exam Calculations with Full Mathematical Breakdown</h2>
+          <p class="text-slate-400 text-xs mt-1">Tests combined mechanics: sensitivity analysis, working capital spikes, and multiple-driven venture dilution.</p>
+        </div>
+
+        <div class="space-y-6" id="hard-container">
+          <!-- Case 1 -->
+          <div class="glass-card p-5 rounded-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-white text-base">Case 1: Dual Price Shock (Sensitivity & Break-Even Analysis)</h3>
+              <span class="text-xs font-semibold px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Break-Even & Leverage</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              A drone startup sells industrial units at <strong>50,000 NOK (Price P)</strong> with direct variable costs of <strong>20,000 NOK (VC/COGS)</strong> and fixed overhead of <strong>1,500,000 NOK (Fixed Costs FC)</strong>.<br>
+              Due to aggressive foreign competition, they must cut prices by <strong>10%</strong>. Simultaneously, global battery shortages raise variable costs by <strong>25%</strong>.<br>
+              <strong>Exam Question:</strong> By what percentage must the startup increase unit sales volume just to reach Break-Even now?
+            </p>
+            <button onclick="toggleHardSolution(1)" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg transition">
+              Reveal Step-by-Step Solution & Formula
+            </button>
+            <div id="hard-sol-1" class="hidden text-xs bg-slate-900 p-4 rounded-lg border border-slate-800 space-y-2 text-slate-300 font-mono">
+              <div class="font-bold text-emerald-400">📐 STEP-BY-STEP SOLUTION:</div>
+              <div>1. Baseline Situation:</div>
+              <div>• Original Contribution Margin: CM = 50,000 - 20,000 = 30,000 NOK.</div>
+              <div>• Original Break-Even Point: BEP = 1,500,000 / 30,000 = <strong>50 drones</strong>.</div>
+              <div class="pt-2">2. After Dual Shock:</div>
+              <div>• New Price: P_new = 50,000 × 0.90 = 45,000 NOK.</div>
+              <div>• New Variable Cost: VC_new = 20,000 × 1.25 = 25,000 NOK.</div>
+              <div>• New Contribution Margin: CM_new = 45,000 - 25,000 = <strong>20,000 NOK</strong> (collapsed by 33.3%!).</div>
+              <div>• New Break-Even Point: BEP_new = 1,500,000 / 20,000 = <strong>75 drones</strong>.</div>
+              <div class="pt-2 text-emerald-300 font-bold">👉 Conclusion: Sales volume must increase by (75 - 50) / 50 = +50.0% just to break even!</div>
+            </div>
+          </div>
+
+          <!-- Case 2 -->
+          <div class="glass-card p-5 rounded-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-white text-base">Case 2: Bankruptcy via Growth (Working Capital Gap Explosion)</h3>
+              <span class="text-xs font-semibold px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20">Working Capital Gap</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              An IoT hardware startup starts January 1 with 1,000,000 NOK cash in bank. In January, they sign a massive B2B contract for <strong>10 MNOK</strong> in revenue. The manufacturing cost is 6 MNOK, which the factory demands paid <strong>cash on Day 30 (Feb 1)</strong>.<br>
+              The corporate buyer has negotiated <strong>90 days payment terms (DSO = 90 days)</strong>.<br>
+              <strong>Exam Question:</strong> How much external short-term liquidity (working capital loan / credit facility) must the founder secure before February 1 to avoid insolvency?
+            </p>
+            <button onclick="toggleHardSolution(2)" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg transition">
+              Reveal Step-by-Step Solution & Formula
+            </button>
+            <div id="hard-sol-2" class="hidden text-xs bg-slate-900 p-4 rounded-lg border border-slate-800 space-y-2 text-slate-300 font-mono">
+              <div class="font-bold text-emerald-400">📐 STEP-BY-STEP SOLUTION:</div>
+              <div>1. Cash Inflow (Penger inn):</div>
+              <div>• Day 1–89: 0 NOK (Customer cash arrives only on Day 90 / April 1).</div>
+              <div class="pt-2">2. Cash Outflow (Penger ut på Dag 30 / Feb 1):</div>
+              <div>• Factory payment due: -6,000,000 NOK.</div>
+              <div class="pt-2">3. Net Cash Position on Feb 1 without financing:</div>
+              <div>• Starting Cash: +1,000,000 NOK.</div>
+              <div>• Outflow: -6,000,000 NOK.</div>
+              <div>• Bank Balance: <strong>-5,000,000 NOK</strong>.</div>
+              <div class="pt-2 text-emerald-300 font-bold">👉 Conclusion: The founder MUST secure at least 5,000,000 NOK in bridge financing or factoring immediately. Otherwise, the company defaults on Feb 1—despite recording 4 MNOK in accounting gross profit!</div>
+            </div>
+          </div>
+
+          <!-- Case 3 -->
+          <div class="glass-card p-5 rounded-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-white text-base">Case 3: Series A Valuation & Founder Cap Table</h3>
+              <span class="text-xs font-semibold px-2 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Venture Capital & Cap Table</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Olav's startup reaches 10 MNOK in Annual Recurring Revenue (ARR). A leading Nordic VC fund offers to invest <strong>15 MNOK</strong> based on an <strong>EV/ARR valuation multiple of 4.5x (Pre-Money)</strong>.<br>
+              <strong>Exam Question:</strong> Calculate the Post-Money Valuation and Olav's retained equity percentage after the investment round.
+            </p>
+            <button onclick="toggleHardSolution(3)" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg transition">
+              Reveal Step-by-Step Solution & Formula
+            </button>
+            <div id="hard-sol-3" class="hidden text-xs bg-slate-900 p-4 rounded-lg border border-slate-800 space-y-2 text-slate-300 font-mono">
+              <div class="font-bold text-emerald-400">📐 STEP-BY-STEP SOLUTION:</div>
+              <div>1. Pre-Money Valuation:</div>
+              <div>• Pre-Money = ARR × Multiple = 10 MNOK × 4.5 = <strong>45 MNOK</strong>.</div>
+              <div class="pt-2">2. Post-Money Valuation:</div>
+              <div>• Post-Money = Pre-Money + New Investment = 45 MNOK + 15 MNOK = <strong>60 MNOK</strong>.</div>
+              <div class="pt-2">3. Equity Percentages:</div>
+              <div>• VC Equity % = New Investment / Post-Money = 15 MNOK / 60 MNOK = <strong>25.0%</strong>.</div>
+              <div>• Olav's Remaining Equity % = 100% - 25% = <strong>75.0%</strong>.</div>
+              <div class="pt-2 text-emerald-300 font-bold">👉 Conclusion: Post-Money is 60 MNOK. Olav's 75% stake is worth 45 MNOK, backed by 15 MNOK in fresh growth capital!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 6: PRESENTATION SLIDE DECK (SERIES A VALUATION & DILUTION) -->
+    <!-- ============================================================== -->
+    <section id="sec-slide" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-slate-800/80 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-bold uppercase mb-1">
+              📊 Slide Presentation Ready • Canva / Miro / Pitch
+            </div>
+            <h2 class="text-xl font-black text-white">Series A Valuation & Founder Dilution Explained</h2>
+            <p class="text-slate-400 text-xs mt-0.5">English presentation standard for MSc in Entrepreneurship (Team 6).</p>
+          </div>
+          <button onclick="copySlideText()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 self-start sm:self-auto transition">
+            <span>📋</span> Copy Slide Text
+          </button>
+        </div>
+
+        <!-- The Actual Visual Slide Container (16:9 Aspect Feel) -->
+        <div class="glass-card border-2 border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 shadow-inner relative overflow-hidden">
+          <!-- Slide Header Bar -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800/80 pb-4">
+            <div>
+              <span class="text-[10px] font-mono tracking-widest text-blue-400 uppercase font-bold">ENT4230 • TOPIC 7 & 8</span>
+              <h3 class="text-xl md:text-2xl font-black text-white tracking-tight">HOW VENTURE VALUATION & DILUTION ACTUALLY WORKS</h3>
+              <p class="text-xs text-slate-400 italic mt-0.5">"Growing the Pie: Why 75% of 60 MNOK beats 100% of 45 MNOK"</p>
+            </div>
+            <div class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-bold self-start md:self-auto">
+              Series A Round
+            </div>
+          </div>
+
+          <!-- 3 Step Horizontal Pipeline -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">1. Pre-Money Valuation</div>
+              <div class="text-2xl font-black text-blue-400 font-mono">45 MNOK</div>
+              <div class="text-xs text-slate-300 font-mono">10 MNOK ARR × 4.5x Multiple</div>
+              <div class="text-[11px] text-slate-500">Agreed baseline enterprise value before new cash arrives. Founder owns 100%.</div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">2. The Cash Injection</div>
+              <div class="text-2xl font-black text-emerald-400 font-mono">+15 MNOK</div>
+              <div class="text-xs text-slate-300 font-mono">Fresh Capital Wired to Bank</div>
+              <div class="text-[11px] text-slate-500">VC investment cash wired straight into company bank account to fund growth.</div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">3. Post-Money Valuation</div>
+              <div class="text-2xl font-black text-purple-400 font-mono">60 MNOK</div>
+              <div class="text-xs text-slate-300 font-mono">45M Pre + 15M Cash</div>
+              <div class="text-[11px] text-slate-500">The total pie. VC receives 25% (15/60). Founder retains 75%.</div>
+            </div>
+          </div>
+
+          <!-- Visual Equity Split Bar -->
+          <div class="glass-panel p-5 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center text-xs font-bold">
+              <span class="text-blue-400 flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50"></span> Founder Equity: 75.0% (45 MNOK)</span>
+              <span class="text-emerald-400 flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span> VC Fund: 25.0% (15 MNOK)</span>
+            </div>
+            <div class="w-full h-8 bg-slate-800 rounded-lg overflow-hidden flex font-mono text-xs font-black shadow-inner">
+              <div style="width: 75%;" class="bg-blue-600 flex items-center justify-center text-white">75% (45 MNOK)</div>
+              <div style="width: 25%;" class="bg-emerald-500 flex items-center justify-center text-slate-950">25% (15M)</div>
+            </div>
+            <div class="text-[11px] text-slate-400 flex justify-between">
+              <span>Pre-Round: Founder owned 100% (Value: 45 MNOK)</span>
+              <span>Post-Round: Founder owns 75% (Value: 45 MNOK + 15M Cash Buffer)</span>
+            </div>
+          </div>
+
+          <!-- The Critical Founder Trap -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-red-950/30 border border-red-900/50 p-4 rounded-xl text-xs space-y-1">
+              <div class="font-bold text-red-400 flex items-center gap-1.5">❌ AMATEUR MISTAKE (Dividing by Pre-Money)</div>
+              <div class="font-mono text-slate-300">15 MNOK / 45 MNOK = 33.3%</div>
+              <p class="text-[11px] text-slate-400">Gives the investor 20 MNOK in value for only 15 MNOK invested! Never divide by Pre-Money.</p>
+            </div>
+
+            <div class="bg-emerald-950/30 border border-emerald-900/50 p-4 rounded-xl text-xs space-y-1">
+              <div class="font-bold text-emerald-400 flex items-center gap-1.5">✅ CORRECT FORMULA (Dividing by Post-Money)</div>
+              <div class="font-mono text-slate-300">15 MNOK / 60 MNOK = 25.0%</div>
+              <p class="text-[11px] text-slate-400">Equity ownership is ALWAYS calculated as a slice of the total enlarged Post-Money pie.</p>
+            </div>
+          </div>
+
+          <!-- Key Insight Banner -->
+          <div class="bg-blue-950/40 border border-blue-800/60 p-4 rounded-xl flex items-start gap-3">
+            <span class="text-xl">💡</span>
+            <div class="text-xs leading-relaxed text-slate-300">
+              <strong class="text-blue-300">Founder Takeaway:</strong> Dilution does NOT mean losing wealth. You gave away 25% of the shares, but your 75% stake is still worth exactly 45 MNOK. Crucially, your company now has <strong>15 MNOK in liquid growth capital</strong> to scale hiring, expand marketing, and target a 200 MNOK valuation at Series B!
+            </div>
+          </div>
+        </div>
+
+        <!-- Speaker Notes / Presentation Script Drawer -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-sm text-slate-200 flex items-center gap-2">🎙️ Speaker Notes (Presentation Script)</h4>
+            <div class="flex gap-2">
+              <button onclick="setScriptLang('en')" id="btn-lang-en" class="text-xs px-2.5 py-1 rounded bg-blue-600 text-white font-semibold">English (UiO Standard)</button>
+              <button onclick="setScriptLang('no')" id="btn-lang-no" class="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-semibold">Norsk</button>
+            </div>
+          </div>
+
+          <div id="script-en" class="text-xs text-slate-300 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 leading-relaxed italic space-y-2">
+            <p>"Good morning. When founders approach their Series A, fear of dilution is often their primary psychological roadblock. Let's look at the financial mechanics:"</p>
+            <p>"Our software venture generates 10 MNOK in ARR. At an agreed industry multiple of 4.5x, our Pre-Money valuation is 45 MNOK. The VC injects 15 MNOK in cash. The common amateur pitfall is dividing 15 by 45, which would erroneously surrender 33.3%."</p>
+            <p>"The mathematically sound method is dividing the new investment by the Post-Money valuation of 60 MNOK. The investor receives exactly 25.0%. While the founder is diluted from 100% to 75%, their equity is still worth exactly 45 MNOK. Most importantly, the venture now holds 15 MNOK in liquidity to accelerate growth and position for a 200 MNOK Series B."</p>
+          </div>
+
+          <div id="script-no" class="hidden text-xs text-slate-300 bg-slate-950/80 p-4 rounded-lg border border-slate-800/80 leading-relaxed italic space-y-2">
+            <p>"Her ser dere matematikken bak en typisk Serie A-runde:"</p>
+            <p>"Selskapet har 10 MNOK i ARR. Med 4.5x multippel er Pre-Money verdsettelse 45 MNOK. Investoren spytter inn 15 MNOK i kontanter. Den klassiske feilen er å dele 15 på 45. Man må dele 15 på Post-Money-verdien på 60 MNOK, som gir investoren nøyaktig 25 %."</p>
+            <p>"Gründeren vannes ut fra 100 % til 75 %, men eierandelen er fremdeles verdt 45 MNOK – og nå har bedriften 15 millioner kroner på bok til å ansette, vokse og sikte mot en 200 MNOK-runde!"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- SHARE MODAL DIALOG                                             -->
+    <!-- ============================================================== -->
+    <div id="share-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="glass-panel border border-slate-700/80 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">📤 Del Simulatoren med Teamet / Klassen</h3>
+          <button onclick="closeShareModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Simulatoren er 100 % selvstendig i én enkelt HTML-fil. Ingen installasjon, ingen servere. Fungerer direkte i nettleseren på Mac, PC, nettbrett og mobil!
+        </p>
+
+        <div class="space-y-3">
+          <!-- Option 1: File -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <div class="text-xs font-bold text-blue-400 mb-1">Alternativ 1: Send HTML-filen direkte (Slack / Discord / Mail)</div>
+            <p class="text-[11px] text-slate-400 mb-2">Filen ligger klar på Mac-en din under:</p>
+            <div class="bg-slate-900 p-2 rounded text-[11px] font-mono text-slate-300 select-all break-all border border-slate-800">
+              UiO/Verktøy/ent4230_startup_cfo_simulator.html
+            </div>
+          </div>
+
+          <!-- Option 2: 100% Free Web Host -->
+          <div class="glass-card p-3.5 rounded-xl">
+            <div class="text-xs font-bold text-emerald-400 mb-1">Alternativ 2: Gjør den til en offentlig nettside-lenke (30 sek)</div>
+            <p class="text-[11px] text-slate-400 mb-2">Gå til <strong>app.netlify.com/drop</strong> og dra og slipp denne HTML-filen rett inn. Da får du en lynrask lenke som <code>https://ent4230-study.netlify.app</code> du kan lime inn i chatten!</p>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeShareModal()" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">Forstått!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-500 border-t border-slate-800/80 pt-6">
+      UiO Master in Entrepreneurship & Innovation Management • ENT4230 Entrepreneurial Finance • Bygget for Olavs læringsrigg (Learn by Doing & Reverse Engineering)
+    </footer>
+  </div>
+
+  <script>
+    // ==========================================
+    // TAB SWITCHER
+    // ==========================================
+    function switchMainTab(tab) {
+      const tabs = ['pl', 'bs', 'val', 'quiz', 'hard', 'slide'];
+      tabs.forEach(t => {
+        document.getElementById('sec-' + t).classList.add('hidden');
+        document.getElementById('nav-' + t).className = "nav-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 text-xs font-semibold transition";
+      });
+      document.getElementById('sec-' + tab).classList.remove('hidden');
+      document.getElementById('nav-' + tab).className = "nav-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold transition shadow-sm";
+
+      if (tab === 'bs') runSimBS();
+      if (tab === 'val') runSimVal();
+      if (tab === 'pl') runSimPL();
+    }
+
+    // Modal
+    function openShareModal() { document.getElementById('share-modal').classList.remove('hidden'); }
+    function closeShareModal() { document.getElementById('share-modal').classList.add('hidden'); }
+
+    function setScriptLang(lang) {
+      if (lang === 'en') {
+        document.getElementById('script-en').classList.remove('hidden');
+        document.getElementById('script-no').classList.add('hidden');
+        document.getElementById('btn-lang-en').className = "text-xs px-2.5 py-1 rounded bg-blue-600 text-white font-semibold";
+        document.getElementById('btn-lang-no').className = "text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-semibold";
+      } else {
+        document.getElementById('script-en').classList.add('hidden');
+        document.getElementById('script-no').classList.remove('hidden');
+        document.getElementById('btn-lang-no').className = "text-xs px-2.5 py-1 rounded bg-blue-600 text-white font-semibold";
+        document.getElementById('btn-lang-en').className = "text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-semibold";
+      }
+    }
+
+    function copySlideText() {
+      const text = `ENT4230: VENTURE VALUATION & FOUNDER DILUTION\nPre-Money: 45 MNOK (10M ARR x 4.5x)\nInvestment: 15 MNOK\nPost-Money: 60 MNOK\nOwnership: VC 25.0% (15/60), Founder 75.0% (45/60)\nKey Rule: Never divide by Pre-Money! Equity is a slice of Post-Money.`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Slide text copied to clipboard!");
+      });
+    }
+
+    // ==========================================
+    // 1. P&L & RATIOS SIMULATOR
+    // ==========================================
+    let currentInspected = 'gpm';
+
+    function resetSlidersPL() {
+      document.getElementById('input-q').value = 60;
+      document.getElementById('input-p').value = 10000;
+      document.getElementById('input-vc').value = 4000;
+      document.getElementById('input-fc').value = 300000;
+      document.getElementById('input-interest').value = 20000;
+      runSimPL();
+    }
+
+    function runSimPL() {
+      const Q = parseInt(document.getElementById('input-q').value);
+      const P = parseInt(document.getElementById('input-p').value);
+      const VC = parseInt(document.getElementById('input-vc').value);
+      const FC = parseInt(document.getElementById('input-fc').value);
+      const Interest = parseInt(document.getElementById('input-interest').value);
+
+      document.getElementById('val-q').innerText = Q;
+      document.getElementById('val-p').innerText = P.toLocaleString('en-US');
+      document.getElementById('val-vc').innerText = VC.toLocaleString('en-US');
+      document.getElementById('val-fc').innerText = FC.toLocaleString('en-US');
+      document.getElementById('val-interest').innerText = Interest.toLocaleString('en-US');
+
+      const Revenue = P * Q;
+      const COGS = VC * Q;
+      const GrossProfit = Revenue - COGS;
+      const EBIT = GrossProfit - FC;
+      const EBT = EBIT - Interest;
+      const Tax = EBT > 0 ? Math.round(EBT * 0.22) : 0;
+      const NetIncome = EBT - Tax;
+
+      document.getElementById('txt-calc-rev').innerText = `${(P/1000).toFixed(0)}k × ${Q}`;
+      document.getElementById('pl-revenue').innerText = Revenue.toLocaleString('en-US') + ' NOK';
+      document.getElementById('txt-calc-cogs').innerText = `${(VC/1000).toFixed(0)}k × ${Q}`;
+      document.getElementById('pl-cogs').innerText = (COGS > 0 ? '-' : '') + COGS.toLocaleString('en-US') + ' NOK';
+      document.getElementById('pl-grossprofit').innerText = GrossProfit.toLocaleString('en-US') + ' NOK';
+      document.getElementById('pl-overhead').innerText = '-' + FC.toLocaleString('en-US') + ' NOK';
+
+      const ebitEl = document.getElementById('pl-ebit');
+      ebitEl.innerText = EBIT.toLocaleString('en-US') + ' NOK';
+      ebitEl.className = EBIT >= 0 ? "py-2.5 px-3 text-right font-mono font-black text-emerald-400" : "py-2.5 px-3 text-right font-mono font-black text-red-400";
+
+      document.getElementById('pl-interest').innerText = (Interest > 0 ? '-' : '') + Interest.toLocaleString('en-US') + ' NOK';
+      document.getElementById('pl-ebt').innerText = EBT.toLocaleString('en-US') + ' NOK';
+      document.getElementById('pl-tax').innerText = (Tax > 0 ? '-' : '') + Tax.toLocaleString('en-US') + ' NOK';
+
+      const netEl = document.getElementById('pl-netincome');
+      netEl.innerText = NetIncome.toLocaleString('en-US') + ' NOK';
+      netEl.className = NetIncome >= 0 ? "py-3 px-3 text-right font-mono font-black text-sm md:text-base text-emerald-400" : "py-3 px-3 text-right font-mono font-black text-sm md:text-base text-red-400";
+
+      const CM = P - VC;
+      let BEP = CM > 0 ? Math.ceil(FC / CM) : 999999;
+      const BEPRevenue = BEP * P;
+
+      const GPM = Revenue > 0 ? ((GrossProfit / Revenue) * 100).toFixed(1) : 0;
+      const OPM = Revenue > 0 ? ((EBIT / Revenue) * 100).toFixed(1) : 0;
+      const NPM = Revenue > 0 ? ((NetIncome / Revenue) * 100).toFixed(1) : 0;
+      const DOL = EBIT > 0 ? (GrossProfit / EBIT).toFixed(1) : (EBIT < 0 ? "Negative" : "∞");
+
+      document.getElementById('ratio-gpm').innerText = GPM + ' %';
+      document.getElementById('ratio-opm').innerText = OPM + ' %';
+      document.getElementById('ratio-npm').innerText = NPM + ' %';
+      document.getElementById('ratio-bep').innerText = (CM > 0 ? BEP + ' units' : 'Impossible');
+      document.getElementById('ratio-bep-rev').innerText = (CM > 0 ? BEPRevenue.toLocaleString('en-US') + ' NOK' : '—');
+      document.getElementById('ratio-dol').innerText = (EBIT > 0 ? DOL + 'x' : 'N/A');
+      document.getElementById('txt-dol-sens').innerText = (EBIT > 0 ? (parseFloat(DOL) * 10).toFixed(0) + ' %' : '—');
+
+      const badgeQ = document.getElementById('badge-q');
+      if (Q > BEP) {
+        badgeQ.innerHTML = `<span class="text-emerald-400 font-mono">🟢 +${Q - BEP} above BEP</span>`;
+      } else if (Q === BEP) {
+        badgeQ.innerHTML = `<span class="text-blue-400 font-mono">⚖️ At Break-Even</span>`;
+      } else {
+        badgeQ.innerHTML = `<span class="text-red-400 font-mono">🔴 -${BEP - Q} below BEP</span>`;
+      }
+
+      inspectRatio(currentInspected);
+    }
+
+    function inspectRatio(type) {
+      currentInspected = type;
+      document.querySelectorAll('.ratio-card').forEach(c => c.classList.remove('ratio-active'));
+      document.querySelectorAll('tr').forEach(r => r.classList.remove('highlight-numerator', 'highlight-denominator'));
+
+      const P = parseInt(document.getElementById('input-p').value);
+      const Q = parseInt(document.getElementById('input-q').value);
+      const VC = parseInt(document.getElementById('input-vc').value);
+      const FC = parseInt(document.getElementById('input-fc').value);
+      const Revenue = P * Q;
+      const GrossProfit = Revenue - (VC * Q);
+      const EBIT = GrossProfit - FC;
+      const NetIncome = (EBIT - parseInt(document.getElementById('input-interest').value)) * 0.78;
+
+      const titleEl = document.getElementById('inspector-title');
+      const mathEl = document.getElementById('inspector-math');
+      const expEl = document.getElementById('inspector-explanation');
+
+      if (type === 'gpm') {
+        document.getElementById('card-gpm').classList.add('ratio-active');
+        document.getElementById('row-grossprofit').classList.add('highlight-numerator');
+        document.getElementById('row-revenue').classList.add('highlight-denominator');
+        titleEl.innerText = "🔍 1. Gross Profit Margin (Bruttomargin)";
+        mathEl.innerHTML = `Gross Margin = Gross Profit / Revenue<br>= ${GrossProfit.toLocaleString('en-US')} NOK / ${Revenue.toLocaleString('en-US')} NOK<br>= <strong>${((GrossProfit/Revenue)*100).toFixed(1)} %</strong>`;
+        expEl.innerHTML = "Viser hvor mange prosent av hver omsetningskrone du sitter igjen med etter at direkte råvarer og fabrikasjon er betalt.";
+      } else if (type === 'opm') {
+        document.getElementById('card-opm').classList.add('ratio-active');
+        document.getElementById('row-ebit').classList.add('highlight-numerator');
+        document.getElementById('row-revenue').classList.add('highlight-denominator');
+        titleEl.innerText = "🔍 2. Operating Profit Margin / EBIT Margin (Driftsmargin)";
+        mathEl.innerHTML = `EBIT Margin = Operating Income (EBIT) / Revenue<br>= ${EBIT.toLocaleString('en-US')} NOK / ${Revenue.toLocaleString('en-US')} NOK<br>= <strong>${((EBIT/Revenue)*100).toFixed(1)} %</strong>`;
+        expEl.innerHTML = "Lønnsomhet fra selve driften før man blander inn gjeld, renter og skatt.";
+      } else if (type === 'npm') {
+        document.getElementById('card-npm').classList.add('ratio-active');
+        document.getElementById('row-netincome').classList.add('highlight-numerator');
+        document.getElementById('row-revenue').classList.add('highlight-denominator');
+        titleEl.innerText = "🔍 3. Net Profit Margin (Nettoresultatmargin)";
+        mathEl.innerHTML = `Net Margin = Net Income / Revenue<br>= ${Math.round(NetIncome).toLocaleString('en-US')} NOK / ${Revenue.toLocaleString('en-US')} NOK<br>= <strong>${((NetIncome/Revenue)*100).toFixed(1)} %</strong>`;
+        expEl.innerHTML = "«Bunnlinjen». Hvor mye eierne sitter igjen med per krone i salg etter at ALT er betalt.";
+      } else if (type === 'bep') {
+        document.getElementById('card-bep').classList.add('ratio-active');
+        document.getElementById('row-overhead').classList.add('highlight-numerator');
+        document.getElementById('row-cogs').classList.add('highlight-denominator');
+        const CM = P - VC;
+        const BEP = CM > 0 ? Math.ceil(FC / CM) : 0;
+        titleEl.innerText = "🔍 4. Break-Even Analysis (Nullpunktanalyse)";
+        mathEl.innerHTML = `BEP = Fixed Costs / (Price - Variable Cost)<br>= ${FC.toLocaleString('en-US')} NOK / (${P.toLocaleString('en-US')} - ${VC.toLocaleString('en-US')})<br>= <strong>${BEP} units (${(BEP * P).toLocaleString('en-US')} NOK Revenue)</strong>`;
+        expEl.innerHTML = "Hvor mange enheter du må selge bare for å betale faste regninger før du tjener en eneste krone.";
+      } else if (type === 'dol') {
+        document.getElementById('card-dol').classList.add('ratio-active');
+        document.getElementById('row-grossprofit').classList.add('highlight-numerator');
+        document.getElementById('row-ebit').classList.add('highlight-denominator');
+        const dolVal = EBIT > 0 ? (GrossProfit / EBIT).toFixed(1) : "N/A";
+        titleEl.innerText = "🔍 5. Degree of Operating Leverage / DOL (Operasjonell giring)";
+        mathEl.innerHTML = `DOL = Gross Profit / EBIT = <strong>${dolVal}x</strong>`;
+        expEl.innerHTML = "Viser følsomheten i overskuddet. Høy andel faste kostnader gir eksplosiv profitt når salget stiger.";
+      }
+    }
+
+    // ==========================================
+    // 2. BALANCE SHEET & NWC SIMULATOR
+    // ==========================================
+    function runSimBS() {
+      const DSO = parseInt(document.getElementById('input-dso').value);
+      const DIO = parseInt(document.getElementById('input-dio').value);
+      const DPO = parseInt(document.getElementById('input-dpo').value);
+
+      document.getElementById('val-dso').innerText = DSO;
+      document.getElementById('val-dio').innerText = DIO;
+      document.getElementById('val-dpo').innerText = DPO;
+
+      const CCC = DIO + DSO - DPO;
+      document.getElementById('res-ccc').innerText = CCC + " dager";
+
+      const dailySales = 20000;
+      const dailyCOGS = 8000;
+
+      const AR = Math.round(DSO * dailySales);
+      const Inv = Math.round(DIO * dailyCOGS);
+      const AP = Math.round(DPO * dailyCOGS);
+      const Cash = Math.max(50000, Math.round(500000 - (AR + Inv - AP - 200000)));
+
+      const CA = Cash + AR + Inv;
+      const CL = AP + 150000;
+      const FixedAssets = 500000;
+      const TotalAssets = CA + FixedAssets;
+      const LongTermDebt = 400000;
+      const Equity = TotalAssets - CL - LongTermDebt;
+
+      document.getElementById('bs-ar').innerText = AR.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-inv').innerText = Inv.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-ap').innerText = AP.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-cash').innerText = Cash.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-ca').innerText = CA.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-cl').innerText = CL.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-equity').innerText = Equity.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-total-assets').innerText = TotalAssets.toLocaleString('en-US') + ' NOK';
+      document.getElementById('bs-total-liab').innerText = TotalAssets.toLocaleString('en-US') + ' NOK';
+
+      const NWC = CA - CL;
+      document.getElementById('res-nwc').innerText = NWC.toLocaleString('en-US') + ' NOK';
+
+      const CR = (CA / CL).toFixed(1);
+      const QR = ((CA - Inv) / CL).toFixed(1);
+      document.getElementById('res-cr').innerText = CR + 'x';
+      document.getElementById('res-qr').innerText = QR + 'x';
+    }
+
+    // Live Term Inspector on Tab 2
+    const termGlossary = {
+      dso: {
+        title: "DSO — Days Sales Outstanding (Kundefordringsdager)",
+        badge: "Kunder / Cash Outflow",
+        desc: "Måler hvor mange dager det i gjennomsnitt tar fra du sender en faktura til kunden faktisk betaler pengene inn på kontoen din. Hvis DSO er 60 dager, må du legge ut for alle kostnader i 2 måneder!",
+        formula: "Formel: (Accounts Receivable / Total Credit Sales) × 365"
+      },
+      dio: {
+        title: "DIO — Days Inventory Outstanding (Varelagerdager)",
+        badge: "Varelager / Binding",
+        desc: "Hvor mange dager deler, halvfabrikata og ferdige varer blir liggende på lageret før de blir solgt. Hver dag en sensor ligger på lager, er penger som ikke kan brukes til å betale lønn.",
+        formula: "Formel: (Ending Inventory / COGS) × 365"
+      },
+      dpo: {
+        title: "DPO — Days Payable Outstanding (Leverandørgjeldsdager)",
+        badge: "Leverandør / Finansiering",
+        desc: "Hvor mange dager du får lov til å vente før du må betale fabrikken eller underleverandørene dine. Å forhandle frem 60 eller 90 dagers DPO fungerer som et gratis lån fra leverandøren!",
+        formula: "Formel: (Accounts Payable / Cost of Goods Sold) × 365"
+      },
+      ccc: {
+        title: "CCC — Cash Conversion Cycle (Kontantomsyklus)",
+        badge: "Arbeidskapital-gap",
+        desc: "Tidsrommet mellom når du må betale ut kontanter til fabrikken og når du mottar kontanter inn fra kunden. Hvis CCC er 75 dager, har du et 75-dagers likviditetsgap som krever banklån eller egenkapital.",
+        formula: "Formel: CCC = DIO + DSO - DPO"
+      },
+      nwc: {
+        title: "NWC — Net Working Capital (Netto arbeidskapital)",
+        badge: "Likviditetsbuffer",
+        desc: "Differansen mellom kortsiktige eiendeler og kortsiktig gjeld. Dette er selve drivstofftanken som holder den daglige driften flytende. Uten positiv NWC kveles bedriften.",
+        formula: "Formel: Current Assets - Current Liabilities"
+      },
+      liquidity: {
+        title: "Current Ratio vs. Quick Ratio (Likviditetsgrad 1 og 2)",
+        badge: "Betalingsevne",
+        desc: "Current Ratio måler om du har nok omløpsmidler til å dekke regninger det neste året. Quick Ratio trekker fra varelageret (som ikke kan spises straks) for å stressteste om du overlever en akutt krise.",
+        formula: "Formel: CR = CA / CL  |  QR = (CA - Inventory) / CL"
+      },
+      ca: {
+        title: "Current Assets (Omløpsmidler / Kortsiktige eiendeler)",
+        badge: "Balanse - Eiendeler",
+        desc: "Penger på konto, utestående kundefordringer og varelager – verdier som forventes omgjort til rene kontanter innen 12 måneder.",
+        formula: "Formel: Cash + Accounts Receivable + Inventory"
+      },
+      cash: {
+        title: "Cash & Cash Equivalents (Bankinnskudd / Likvide midler)",
+        badge: "Ren Likviditet",
+        desc: "Faktiske penger på brukskontoen og høyrentekontoer som er klare til å betale regninger og lønninger i dag.",
+        formula: "Formel: Saldo på firmakonto"
+      },
+      ar: {
+        title: "Accounts Receivable / AR (Kundefordringer)",
+        badge: "Penger til gode",
+        desc: "Fakturaer du har sendt til kundene dine som de ennå ikke har betalt. Regnskapet sier du har tjent pengene, men bankkontoen er tom inntil kunden gjør opp.",
+        formula: "Formel: Utestående fakturabeløp til kunder"
+      },
+      inv: {
+        title: "Inventory (Varelager)",
+        badge: "Fysiske varer",
+        desc: "Råvarer, halvfabrikata og ferdige varer som ligger på hylla. Er verdt penger, men kan ikke brukes direkte til å betale husleie før de er solgt og betalt.",
+        formula: "Formel: Bokført anskaffelseskost for varelager"
+      },
+      fa: {
+        title: "Fixed Assets (Anleggsmidler)",
+        badge: "Varige eiendeler",
+        desc: "Fabrikkbygg, maskiner, patenter og testutstyr ment for varig eie og bruk over flere år. Avskrives over tid.",
+        formula: "Formel: Anskaffelseskost minus akkumulerte avskrivninger"
+      },
+      cl: {
+        title: "Current Liabilities (Kortsiktig gjeld)",
+        badge: "Gjeld < 12 mnd",
+        desc: "Alle regninger, leverandørgjeld, skyldig skatt og kortsiktige banklån som må betales innen de neste 12 månedene.",
+        formula: "Formel: Leverandørgjeld + Kassakreditt + Skyldig moms/skatt"
+      },
+      ap: {
+        title: "Accounts Payable / AP (Leverandørgjeld)",
+        badge: "Ubetalte regninger",
+        desc: "Fakturaer du har mottatt fra fabrikken og underleverandørene for deler du allerede har fått levert, men ennå ikke har betalt.",
+        formula: "Formel: Utestående fakturaer til leverandører"
+      },
+      stdebt: {
+        title: "Short-Term Debt & Credit (Kassakreditt / Kortsiktig lån)",
+        badge: "Bankfinansiering",
+        desc: "Kortsiktig kredittramme i banken for å dekke uforutsette hull i likviditeten.",
+        formula: "Formel: Overtrukket kredittramme"
+      },
+      bonds: {
+        title: "Long-Term Debt & Bonds (Obligasjoner og Langsiktig lån)",
+        badge: "Fremmedkapital",
+        desc: "Lån med forfall over ett år. Obligasjoner (bonds) utstedes i markedet til bondholders mot en fast årlig kupongrente (coupon rate) og full tilbakebetaling på forfallsdagen (maturity date).",
+        formula: "Formel: Antall obligasjoner × Face Value"
+      },
+      equity: {
+        title: "Shareholders' Equity (Egenkapital)",
+        badge: "Eiernes kapital",
+        desc: "Eiernes andel av verdiene i selskapet. Alltid lik Sum Eiendeler (Total Assets) minus Total Gjeld (Liabilities). Består av innskutt aksjekapital pluss tilbakeholdt overskudd.",
+        formula: "Formel: Equity = Total Assets - Total Liabilities"
+      }
+    };
+
+    function showTermInInspector(key) {
+      const data = termGlossary[key];
+      if (!data) return;
+      document.getElementById('term-insp-title').innerText = data.title;
+      document.getElementById('term-insp-badge').innerText = data.badge;
+      document.getElementById('term-insp-desc').innerText = data.desc;
+      document.getElementById('term-insp-formula').innerText = data.formula;
+      
+      const card = document.getElementById('term-inspector-card');
+      card.className = "bg-slate-950 border border-blue-500 rounded-2xl p-4 shadow-2xl flex items-start gap-4 ring-2 ring-blue-500/30 transition-all";
+      setTimeout(() => {
+        card.className = "bg-slate-950/90 border border-blue-500/30 rounded-2xl p-4 shadow-xl flex items-start gap-4 transition-all";
+      }, 800);
+    }
+
+    // ==========================================
+    // 3. VENTURE VALUATION SIMULATOR
+    // ==========================================
+    function runSimVal() {
+      const Pre = parseFloat(document.getElementById('input-pre').value);
+      const Inv = parseFloat(document.getElementById('input-inv').value);
+      const ARR = parseFloat(document.getElementById('input-arr').value);
+
+      document.getElementById('val-pre').innerText = Pre.toFixed(1);
+      document.getElementById('val-inv').innerText = Inv.toFixed(1);
+      document.getElementById('val-arr').innerText = ARR.toFixed(1);
+
+      const Post = Pre + Inv;
+      const InvPct = (Inv / Post) * 100;
+      const FounderPct = 100 - InvPct;
+      const Multiple = Post / ARR;
+
+      document.getElementById('res-post').innerText = Post.toFixed(1) + ' MNOK';
+      document.getElementById('res-inv-pct').innerText = InvPct.toFixed(1) + ' %';
+      document.getElementById('res-founder-pct').innerText = FounderPct.toFixed(1) + ' %';
+      document.getElementById('res-multiple').innerText = Multiple.toFixed(1) + 'x ARR';
+    }
+
+    // ==========================================
+    // 4. TEST #1 MASTER QUIZ (15 BALANCED QUESTIONS)
+    // ==========================================
+    const questions = [
+      {
+        q: "1. What happens to the Break-Even Point (in units) if a startup's Fixed Overhead (FC) increases by 25%, while Unit Price (P) and Variable Costs (VC) remain unchanged?",
+        options: [
+          "The company MUST sell MORE units to break even.",
+          "The Break-Even Point remains completely unchanged.",
+          "The company needs to sell fewer units because contribution margin increases.",
+          "The Gross Profit Margin automatically decreases by 25%."
+        ],
+        correct: 0,
+        explain: "Correct (A)! Formula is BEP = FC / (P - VC). When the numerator (FC / rent / overhead) increases, the required break-even unit volume increases proportionally."
+      },
+      {
+        q: "2. What is the fundamental legal and financial difference between a Shareholder (Aksjonær) and a Bondholder (Obligasjonseier)?",
+        options: [
+          "Shareholders are entitled only to fixed interest, while bondholders own company equity.",
+          "Bondholders possess voting rights in general shareholder meetings.",
+          "Shareholders are equity co-owners with variable upside; Bondholders are debt creditors with fixed coupon interest and senior priority in bankruptcy.",
+          "There is no difference – both receive dividend distributions decided by the board."
+        ],
+        correct: 2,
+        explain: "Correct (C)! Shareholders hold equity (highest risk, unlimited upside). Bondholders are creditors who lent capital, receiving fixed coupon interest and enjoying legal priority over assets in bankruptcy."
+      },
+      {
+        q: "3. A hardware sensor is sold at 10,000 NOK (Price P). Direct component and assembly cost is 4,000 NOK (Variable Cost VC). What is the Contribution Margin Ratio (Dekningsgrad)?",
+        options: [
+          "40 %",
+          "60 %",
+          "25 %",
+          "150 %"
+        ],
+        correct: 1,
+        explain: "Correct (B)! Contribution Margin = P - VC = 10,000 - 4,000 = 6,000 NOK. The Contribution Margin Ratio is 6,000 / 10,000 = 60%."
+      },
+      {
+        q: "4. What is 'The Working Capital Gap' (Cash-Flow Timing Gap), and why is it dangerous for fast-growing ventures?",
+        options: [
+          "The gap between market enterprise value and book equity value.",
+          "The numerical difference between interest expense and corporate tax.",
+          "The time lag between paying suppliers/salaries and collecting customer invoice cash – profitable companies can fail due to cash exhaustion.",
+          "Losses incurred when inventory becomes obsolete and is written off."
+        ],
+        correct: 2,
+        explain: "Correct (C)! Sales are booked when invoices are sent (accrual accounting). But if buyers demand 60 days credit while factory and salaries must be paid within 14 days, the bank account empties before cash arrives."
+      },
+      {
+        q: "5. What constitutes OVERHEAD costs in corporate finance?",
+        options: [
+          "Direct materials and parts consumed inside each manufactured unit.",
+          "Corporate income tax paid to the government.",
+          "Dividends paid out to shareholders at year-end.",
+          "Indirect fixed operating costs like office rent, IT software licenses, audit fees, and executive management."
+        ],
+        correct: 3,
+        explain: "Correct (D)! Overhead represents indirect operating expenses required to sustain the organization regardless of whether you produce 0 or 10,000 units."
+      },
+      {
+        q: "6. In Vertical Analysis of an Income Statement (Resultatregnskap), which item is universally designated as the 100% benchmark base?",
+        options: [
+          "Net Sales / Revenue (Salgsinntekter)",
+          "Operating Income / EBIT (Driftsresultat)",
+          "Total Assets (Sum Eiendeler)",
+          "Net Income (Årsresultat)"
+        ],
+        correct: 0,
+        explain: "Correct (A)! In the Income Statement, Net Sales = 100%, and all other items (COGS, Gross Profit, Overhead, EBIT) are expressed as a percentage of sales. (In the Balance Sheet, Total Assets = 100%)."
+      },
+      {
+        q: "7. A firm reports Total Assets of 10 MNOK and Operating Income (EBIT) of 1 MNOK. What is its Operating Return on Assets (OROA)?",
+        options: [
+          "5 %",
+          "10 %",
+          "20 %",
+          "100 %"
+        ],
+        correct: 1,
+        explain: "Correct (B)! OROA = EBIT / Total Assets = 1 MNOK / 10 MNOK = 10%. Measures asset productivity before interest and tax distortions."
+      },
+      {
+        q: "8. What is the stated annual interest rate that a bond issuer contractually promises to pay bondholders called?",
+        options: [
+          "Dividend Yield",
+          "Maturity Margin",
+          "Coupon Rate (Kupongrente)",
+          "Internal Rate of Return (IRR)"
+        ],
+        correct: 2,
+        explain: "Correct (C)! Coupon Rate is the contractual annual interest based on Par Value. The term originates from historic physical paper certificates with detachable coupons clipped with scissors!"
+      },
+      {
+        q: "9. What does the Current Ratio (Likviditetsgrad 1) measure, and what is its formula?",
+        options: [
+          "Current Assets / Current Liabilities (Omløpsmidler / Kortsiktig gjeld) – measures short-term solvency over the coming 12 months.",
+          "Net Income / Total Equity – measures return on shareholder equity.",
+          "Total Debt / Total Assets – measures capital structure leverage.",
+          "Cash / Revenue – measures cash generation per sales dollar."
+        ],
+        correct: 0,
+        explain: "Correct (A)! Current Ratio evaluates short-term liquidity. A ratio below 1.0 means current liabilities exceed current assets, signaling immediate default risks."
+      },
+      {
+        q: "10. What characterizes a business model with HIGH Operating Leverage (e.g., a pure software/SaaS platform)?",
+        options: [
+          "Extremely low fixed costs combined with high variable unit costs.",
+          "Substantial upfront fixed engineering costs, but near-zero variable cost per incremental user – producing explosive profit growth past Break-Even.",
+          "Funding solely via senior bank loans and commercial bonds.",
+          "Zero bankruptcy vulnerability during sales downturns."
+        ],
+        correct: 1,
+        explain: "Correct (B)! SaaS has high fixed developer overhead, but servicing new users costs virtually nothing. Past break-even, each revenue dollar flows almost 100% to EBIT."
+      },
+      {
+        q: "11. What occurs upon a bond's contractual 'Maturity Date' (Forfallsdato)?",
+        options: [
+          "Shareholders vote on whether to cancel the loan.",
+          "Interest rates double automatically if the issuer failed to turn a profit.",
+          "The issuer is legally obligated to repay the full Principal (Face Value) back to bondholders, alongside the final coupon interest.",
+          "The bond converts automatically into free common shares."
+        ],
+        correct: 2,
+        explain: "Correct (C)! Maturity marks loan termination. Investors receive their original face value principal (e.g., 10,000 NOK) plus the final coupon payment."
+      },
+      {
+        q: "12. What is the core distinction between Gross Margin (Bruttomargin) and Operating Margin / EBIT Margin (Driftsmargin)?",
+        options: [
+          "Gross Margin deducts only direct production costs (COGS); EBIT Margin additionally deducts all indirect overhead and SG&A expenses.",
+          "Gross Margin includes corporate tax, while EBIT Margin is before tax.",
+          "EBIT Margin measures pure cash flow, while Gross Margin is an accounting fiction.",
+          "They are two synonymous names for the exact same metric."
+        ],
+        correct: 0,
+        explain: "Correct (A)! Gross Margin = (Revenue - COGS) / Revenue. EBIT Margin = (Revenue - COGS - Overhead) / Revenue. The difference between them is company overhead!"
+      },
+      {
+        q: "13. Why does every pro forma financial model (Topic 3 & Group Assignment 2) ALWAYS begin with the Sales Forecast?",
+        options: [
+          "Because regulatory auditors mandate revenue reporting first.",
+          "Because corporate taxes must be settled prior to buying raw materials.",
+          "Because all operational assumptions (purchases, inventory, hiring, working capital needs) are directly driven by expected sales volume.",
+          "Because share price is automatically derived from the sales projection."
+        ],
+        correct: 2,
+        explain: "Correct (C)! Falck stresses this principle: You cannot determine factory staffing, inventory purchases, or financing needs without first projecting unit sales volume."
+      },
+      {
+        q: "14. If a startup records 2,000,000 NOK in monthly revenue, COGS of 800,000 NOK, and fixed overhead of 900,000 NOK – what is Operating Income (EBIT)?",
+        options: [
+          "1,200,000 NOK",
+          "1,100,000 NOK",
+          "300,000 NOK",
+          "-100,000 NOK"
+        ],
+        correct: 2,
+        explain: "Correct (C)! Gross Profit = 2,000,000 - 800,000 = 1,200,000 NOK. EBIT = 1,200,000 - 900,000 = 300,000 NOK."
+      },
+      {
+        q: "15. Why do early-stage startups virtually never issue corporate bonds to raise early capital?",
+        options: [
+          "Because securities laws prohibit firms with under 50 employees from borrowing.",
+          "Because early startups lack predictable cash flow to service mandatory coupon payments, and insolvency risk is too high for bond investors.",
+          "Because venture capitalists legally require 100% debt financing.",
+          "Because bond coupon interest is deducted directly from founder personal salaries."
+        ],
+        correct: 1,
+        explain: "Correct (B)! Early startups burn cash and cannot guarantee fixed semi-annual coupon payouts. Hence, they issue equity or convertible notes (SAFE/Convertibles)."
+      }
+    ];
+
+    let userScore = 0;
+    let answered = {};
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = "";
+      document.getElementById('quiz-total').innerText = questions.length;
+
+      questions.forEach((item, qIdx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = "glass-card p-4 md:p-5 rounded-xl border border-slate-800 space-y-3";
+        qDiv.innerHTML = `
+          <div class="font-bold text-slate-100 text-sm md:text-base leading-snug">${item.q}</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="options-${qIdx}">
+            ${item.options.map((opt, oIdx) => `
+              <button onclick="handleAnswer(${qIdx}, ${oIdx})" id="opt-${qIdx}-${oIdx}" class="w-full text-left p-2.5 md:p-3 rounded-lg border border-slate-800 bg-slate-900/80 hover:bg-slate-800 hover:border-slate-700 text-xs md:text-sm text-slate-300 transition">
+                <span class="font-mono font-bold text-slate-400 mr-1.5">${String.fromCharCode(65 + oIdx)})</span> ${opt}
+              </button>
+            `).join('')}
+          </div>
+          <div id="feedback-${qIdx}" class="hidden text-xs p-3 rounded-lg mt-2 font-sans leading-relaxed"></div>
+        `;
+        container.appendChild(qDiv);
+      });
+    }
+
+    function handleAnswer(qIdx, oIdx) {
+      if (answered[qIdx] !== undefined) return;
+      answered[qIdx] = oIdx;
+
+      const q = questions[qIdx];
+      const fb = document.getElementById(`feedback-${qIdx}`);
+      fb.classList.remove('hidden');
+
+      if (oIdx === q.correct) {
+        userScore++;
+        document.getElementById(`opt-${qIdx}-${oIdx}`).className = "w-full text-left p-2.5 md:p-3 rounded-lg border border-emerald-500 bg-emerald-500/20 text-emerald-200 text-xs md:text-sm font-semibold";
+        fb.className = "text-xs p-3 rounded-lg mt-2 bg-emerald-950/60 border border-emerald-800 text-emerald-300";
+        fb.innerHTML = `✅ <strong>Correct (${String.fromCharCode(65 + q.correct)})!</strong> ${q.explain}`;
+      } else {
+        document.getElementById(`opt-${qIdx}-${oIdx}`).className = "w-full text-left p-2.5 md:p-3 rounded-lg border border-red-500 bg-red-500/20 text-red-200 text-xs md:text-sm font-semibold";
+        document.getElementById(`opt-${qIdx}-${q.correct}`).className = "w-full text-left p-2.5 md:p-3 rounded-lg border border-emerald-500 bg-emerald-500/20 text-emerald-200 text-xs md:text-sm font-semibold";
+        fb.className = "text-xs p-3 rounded-lg mt-2 bg-red-950/60 border border-red-800 text-red-300";
+        fb.innerHTML = `❌ <strong>Incorrect. Correct answer was (${String.fromCharCode(65 + q.correct)}).</strong> ${q.explain}`;
+      }
+
+      document.getElementById('quiz-score').innerText = userScore;
+    }
+
+    function resetQuiz() {
+      userScore = 0;
+      answered = {};
+      document.getElementById('quiz-score').innerText = "0";
+      renderQuiz();
+    }
+
+    // ==========================================
+    // 5. HARDCORE EXAM SOLUTIONS TOGGLE
+    // ==========================================
+    function toggleHardSolution(id) {
+      const target = document.getElementById('hard-sol-' + id);
+      if (target.classList.contains('hidden')) {
+        target.classList.remove('hidden');
+      } else {
+        target.classList.add('hidden');
+      }
+    }
+
+    // Initialize all
+    runSimPL();
+    renderQuiz();
+  </script>
+</body>
+</html>

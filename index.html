@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>UiO Master Deadlines & Prioritization Kanban — Fall 2026</title>
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 15% 15%, #131b2e 0%, #0a0e17 100%);
+      --bg-page: #0a0e17;
+      --bg-surface: rgba(18, 26, 43, 0.75);
+      --bg-card: rgba(22, 32, 54, 0.85);
+      --bg-card-hover: rgba(28, 41, 68, 0.95);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(255, 255, 255, 0.18);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      
+      --ent4000: #10b981;
+      --ent4000-bg: rgba(16, 185, 129, 0.14);
+      --ent4080: #f59e0b;
+      --ent4080-bg: rgba(245, 158, 11, 0.14);
+      --ent4050: #a855f7;
+      --ent4050-bg: rgba(168, 85, 247, 0.14);
+      --ent4230: #3b82f6;
+      --ent4230-bg: rgba(59, 130, 246, 0.14);
+      --system: #64748b;
+      --system-bg: rgba(100, 116, 139, 0.14);
+      
+      --p0-glow: rgba(239, 68, 68, 0.25);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    [data-theme="light"] {
+      --bg-gradient: radial-gradient(circle at 15% 15%, #f8fafc 0%, #e2e8f0 100%);
+      --bg-page: #f8fafc;
+      --bg-surface: rgba(255, 255, 255, 0.85);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-highlight: rgba(0, 0, 0, 0.16);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #94a3b8;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    /* Top Navigation & Header */
+    header {
+      max-width: 1720px;
+      margin: 0 auto 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .title-group h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-group p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-highlight);
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* Links Bar */
+    .resource-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      background: var(--bg-surface);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      font-size: 13px;
+    }
+
+    .resource-links span {
+      color: var(--text-subtle);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-right: 4px;
+    }
+
+    .resource-pill {
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.15s ease;
+    }
+
+    .resource-pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-highlight);
+      color: #60a5fa;
+    }
+
+    /* Stats Overview Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+      max-width: 1720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card.urgent {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(18, 26, 43, 0.8) 100%);
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-card .value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-card .sub {
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    /* Filters Bar */
+    .filter-bar {
+      max-width: 1720px;
+      margin: 0 auto 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-surface);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 4px;
+    }
+
+    .chip {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .chip.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+
+    .search-input {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      width: 260px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input:focus {
+      border-color: #3b82f6;
+    }
+
+    /* Kanban Board Layout */
+    .kanban-board {
+      max-width: 1720px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(310px, 1fr));
+      gap: 16px;
+      align-items: start;
+      overflow-x: auto;
+      padding-bottom: 24px;
+    }
+
+    .kanban-column {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      min-height: 600px;
+      max-height: calc(100vh - 280px);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .column-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: inherit;
+      border-top-left-radius: var(--radius-md);
+      border-top-right-radius: var(--radius-md);
+      z-index: 2;
+    }
+
+    .column-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .column-count {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .column-cards {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      flex-grow: 1;
+      min-height: 200px;
+    }
+
+    .column-cards.drag-over {
+      background: rgba(59, 130, 246, 0.05);
+      outline: 2px dashed rgba(59, 130, 246, 0.4);
+      outline-offset: -4px;
+    }
+
+    /* Kanban Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      cursor: grab;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-highlight);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card.dragging {
+      opacity: 0.4;
+      cursor: grabbing;
+    }
+
+
+    .card.card-test {
+      border-color: rgba(245, 158, 11, 0.55);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, var(--bg-card) 100%);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.12);
+    }
+
+    .test-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      letter-spacing: 0.03em;
+    }
+
+    .card.p0-urgent {
+      border-color: rgba(239, 68, 68, 0.5);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, var(--bg-card) 100%);
+      box-shadow: 0 0 16px var(--p0-glow);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .course-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .course-ENT4000 { background: var(--ent4000-bg); color: var(--ent4000); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .course-ENT4080 { background: var(--ent4080-bg); color: var(--ent4080); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .course-ENT4050 { background: var(--ent4050-bg); color: var(--ent4050); border: 1px solid rgba(168, 85, 247, 0.3); }
+    .course-ENT4230 { background: var(--ent4230-bg); color: var(--ent4230); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .course-NEXUS, .course-UiO { background: var(--system-bg); color: var(--system); border: 1px solid rgba(100, 116, 139, 0.3); }
+
+    .date-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .team-badge {
+      font-size: 11px;
+      color: var(--text-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+    }
+
+    .urgency-tag {
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .urgency-P0 { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .urgency-P1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .urgency-P2 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .urgency-P3 { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+    .urgency-Done { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+    .weight-tag {
+      color: var(--text-subtle);
+      font-weight: 500;
+    }
+
+    /* Modal Details View */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #0f172a;
+      border: 1px solid var(--border-highlight);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    [data-theme="light"] .modal {
+      background: #ffffff;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-subtle);
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-close:hover {
+      color: var(--text-main);
+    }
+
+    .modal-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-subtle);
+    }
+
+    .modal-action-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #93c5fd;
+    }
+
+    .modal-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .modal-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      transition: all 0.15s;
+    }
+
+    .modal-link-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #3b82f6;
+      color: #60a5fa;
+    }
+
+    /* Pulse animation for P0 urgent */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0;
+      }
+      .filter-bar, .header-actions, .resource-links {
+        display: none !important;
+      }
+      .kanban-board {
+        display: block !important;
+      }
+      .kanban-column {
+        page-break-inside: avoid;
+        margin-bottom: 24px;
+        max-height: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-top">
+      <div class="title-group">
+        <h1>🗓️ UiO Master — Deadlines & Prioritization Kanban</h1>
+        <p>Semester 1 (Fall 2026) • Team 6 Operations Center • <span id="canvas-status-pill" style="display:inline-flex; align-items:center; gap:5px; background:rgba(16, 185, 129, 0.18); color:#10b981; padding:2px 8px; border-radius:12px; font-weight:600; font-size:12px;">✅ Canvas Synket: 7 Levert</span></p>
+      </div>
+      <div class="header-actions">
+        <button class="btn" onclick="syncWithCanvas()" title="Synkroniser med UiO Canvas innleveringer">🔄 Canvas Sync</button>
+        <button class="btn" onclick="toggleTheme()">🌓 Theme</button>
+        <button class="btn" onclick="filterUrgentOnly()">🚨 Urgent Only</button>
+        <button class="btn" onclick="resetBoard()">Reset Board</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print / PDF</button>
+      </div>
+    </div>
+
+    <!-- Quick Team 6 Shared Links -->
+    <div class="resource-links">
+      <span>Shared Team 6 Hubs:</span>
+      <a class="resource-pill" href="https://miro.com/app/board/uXjVHqnr5fc=/" target="_blank">📋 Team 6 Miro</a>
+      <a class="resource-pill" href="https://miro.com/app/board/uXjVHq2mcZU=/" target="_blank">📊 ENT4080 Miro (PEV)</a>
+      <a class="resource-pill" href="https://miro.com/app/board/uXjVHq5o-LQ=/" target="_blank">🧭 ENT4000 Miro (Needfinding)</a>
+      <a class="resource-pill" href="https://docs.google.com/document/d/125ykJ39Y5so9PPHksryuqXMJKzXkrx0zFG2zoAfhZio/edit" target="_blank">📄 ENT4080 Shared Doc</a>
+      <a class="resource-pill" href="https://docs.google.com/spreadsheets/d/12A4cbpaxClQRWDmV2Farx6QWgwzjutLTQUnvBOyQdiI/edit" target="_blank">📈 PEV Macro Sheet</a>
+      <a class="resource-pill" href="./Verkt%C3%B8y/ent4230_startup_cfo_simulator.html" target="_blank">🎮 CFO Simulator</a>
+      <a class="resource-pill" href="https://uio.instructure.com" target="_blank">🎓 UiO Canvas</a>
+    </div>
+  </header>
+
+  <!-- High-Level Metric Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card" style="border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(18, 26, 43, 0.8) 100%);">
+      <span class="label">🎯 Prøver & Eksamen</span>
+      <span class="value" id="stat-tests">8 Prøver</span>
+      <span class="sub">ENT4080 (2), ENT4230 (4), ENT4050 (1), ENT4000 (1)</span>
+    </div>
+
+    <div class="stat-card urgent">
+      <span class="label">🚨 Critical & Urgent (&lt; 48 Hours)</span>
+      <span class="value" id="stat-urgent">3 Deliverables</span>
+      <span class="sub">Immediate focus: ENT4080 PEV Deck, Team Charter, SMB Interviews</span>
+    </div>
+    <div class="stat-card">
+      <span class="label">🟡 Sprint Backlog (Weeks 38–39)</span>
+      <span class="value" id="stat-sprint">7 Milestones</span>
+      <span class="sub">Includes ENT4080 Test #1 & ENT4230 Test #1</span>
+    </div>
+    <div class="stat-card">
+      <span class="label">🔵 Midterms & Cases (October)</span>
+      <span class="value" id="stat-midterm">9 Items</span>
+      <span class="sub">Case 1 & 2 Evaluations + ENT4230 Test #2</span>
+    </div>
+    <div class="stat-card">
+      <span class="label">🟣 Major Graded & Finals (Nov–Dec)</span>
+      <span class="value" id="stat-finals">13 Key Finals</span>
+      <span class="sub">Major 50% Written, Business Plan & Graded Cases</span>
+    </div>
+    <div class="stat-card">
+      <span class="label">🟢 Completed & Delivered</span>
+      <span class="value" id="stat-completed">4 Deliverables</span>
+      <span class="sub">100% on time: ENT4000, ENT4080, ENT4230</span>
+    </div>
+  </div>
+
+  <!-- Search and Filtering Bar -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Type:</span>
+      <button class="chip active" data-type="all" onclick="setTypeFilter('all')">Alle</button>
+      <button class="chip" data-type="deadline" onclick="setTypeFilter('deadline')">📋 Kun Frister</button>
+      <button class="chip" data-type="test" onclick="setTypeFilter('test')">🎯 Kun Prøver & Eksamen</button>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Course:</span>
+      <button class="chip active" data-course="all" onclick="setCourseFilter('all')">All Courses</button>
+      <button class="chip" data-course="ENT4000" onclick="setCourseFilter('ENT4000')">ENT4000</button>
+      <button class="chip" data-course="ENT4080" onclick="setCourseFilter('ENT4080')">ENT4080</button>
+      <button class="chip" data-course="ENT4050" onclick="setCourseFilter('ENT4050')">ENT4050</button>
+      <button class="chip" data-course="ENT4230" onclick="setCourseFilter('ENT4230')">ENT4230</button>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Priority:</span>
+      <button class="chip active" data-priority="all" onclick="setPriorityFilter('all')">All</button>
+      <button class="chip" data-priority="P0" onclick="setPriorityFilter('P0')">🔴 P0 Critical</button>
+      <button class="chip" data-priority="P1" onclick="setPriorityFilter('P1')">🟡 P1 Sprint</button>
+      <button class="chip" data-priority="P2" onclick="setPriorityFilter('P2')">🔵 P2 Midterms</button>
+      <button class="chip" data-priority="P3" onclick="setPriorityFilter('P3')">🟣 P3 Finals</button>
+      <button class="chip" data-priority="Done" onclick="setPriorityFilter('Done')">🟢 Done</button>
+    </div>
+
+    <input type="text" id="search-box" class="search-input" placeholder="🔍 Search tasks, roles, topics... (Press /)" oninput="handleSearch(this.value)">
+  </div>
+
+  <!-- The 5-Column Kanban Board -->
+  <main class="kanban-board">
+    <!-- Col 1: Urgent -->
+    <div class="kanban-column" id="col-urgent" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'urgent')">
+      <div class="column-header">
+        <div class="column-title">
+          <span>🚨 URGENT / IN PROGRESS</span>
+          <span class="column-count" id="count-urgent">0</span>
+        </div>
+        <span style="font-size: 11px; color: var(--text-subtle);">Next 24–48h</span>
+      </div>
+      <div class="column-cards" id="cards-urgent"></div>
+    </div>
+
+    <!-- Col 2: Sprint Backlog -->
+    <div class="kanban-column" id="col-sprint" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'sprint')">
+      <div class="column-header">
+        <div class="column-title">
+          <span>🟡 SPRINT BACKLOG</span>
+          <span class="column-count" id="count-sprint">0</span>
+        </div>
+        <span style="font-size: 11px; color: var(--text-subtle);">W38–39</span>
+      </div>
+      <div class="column-cards" id="cards-sprint"></div>
+    </div>
+
+    <!-- Col 3: Midterms & Cases -->
+    <div class="kanban-column" id="col-midterm" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'midterm')">
+      <div class="column-header">
+        <div class="column-title">
+          <span>🔵 MIDTERMS & CASES</span>
+          <span class="column-count" id="count-midterm">0</span>
+        </div>
+        <span style="font-size: 11px; color: var(--text-subtle);">October 2026</span>
+      </div>
+      <div class="column-cards" id="cards-midterm"></div>
+    </div>
+
+    <!-- Col 4: Major Graded & Finals -->
+    <div class="kanban-column" id="col-finals" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'finals')">
+      <div class="column-header">
+        <div class="column-title">
+          <span>🟣 MAJOR GRADED & FINALS</span>
+          <span class="column-count" id="count-finals">0</span>
+        </div>
+        <span style="font-size: 11px; color: var(--text-subtle);">Nov – Dec</span>
+      </div>
+      <div class="column-cards" id="cards-finals"></div>
+    </div>
+
+    <!-- Col 5: Completed -->
+    <div class="kanban-column" id="col-completed" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'completed')">
+      <div class="column-header">
+        <div class="column-title">
+          <span>🟢 COMPLETED & DELIVERED</span>
+          <span class="column-count" id="count-completed">0</span>
+        </div>
+        <span style="font-size: 11px; color: var(--text-subtle);">Verified</span>
+      </div>
+      <div class="column-cards" id="cards-completed"></div>
+    </div>
+  </main>
+
+  <!-- Modal Details Dialog -->
+  <div class="modal-backdrop" id="card-modal" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+            <span id="modal-course" class="course-badge"></span>
+            <span id="modal-priority" class="urgency-tag"></span>
+            <span id="modal-due" style="font-size: 12px; color: var(--text-muted); font-weight: 600;"></span>
+          </div>
+          <h2 id="modal-title" style="font-size: 18px; font-weight: 700; line-height: 1.3;"></h2>
+        </div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div class="modal-section">
+        <span class="modal-section-title">⚡ Immediate Key Action & Next Step:</span>
+        <div id="modal-action" class="modal-action-box"></div>
+      </div>
+
+      <div class="modal-section">
+        <span class="modal-section-title">👥 Team 6 Ownership & Roles:</span>
+        <div id="modal-roles" style="font-size: 13px; color: var(--text-main); background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);"></div>
+      </div>
+
+      <div class="modal-section">
+        <span class="modal-section-title">📊 Weight & Delivery Format:</span>
+        <div id="modal-weight" style="font-size: 13px; color: var(--text-muted);"></div>
+      </div>
+
+      <div class="modal-section">
+        <span class="modal-section-title">📝 Scope & Assignment Description:</span>
+        <div id="modal-details" style="font-size: 13px; color: var(--text-muted); white-space: pre-wrap; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 6px; border: 1px solid var(--border-subtle);"></div>
+      </div>
+
+      <div class="modal-section">
+        <span class="modal-section-title">🔗 Direct Resource Links:</span>
+        <div id="modal-links" class="modal-links"></div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+        <span style="font-size: 12px; color: var(--text-subtle);">Tip: Drag cards between columns to update status</span>
+        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Embedded Raw Card Data
+    const INITIAL_CARDS = [
+  {
+    "id": "ent4000-2026-08-27-1200",
+    "course": "ENT4000",
+    "title": "DEADLINE: Written Assignment (In-Class)",
+    "date": "2026-08-27",
+    "time": "12:00",
+    "column": "completed",
+    "status": "graded",
+    "priority": "Done",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST:\n- ENT4000 Written Assignment (In-class)\n- Frist: Torsdag 27. august",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-09-01-0800",
+    "course": "ENT4080",
+    "title": "DEADLINE: Assignment 1",
+    "date": "2026-09-01",
+    "time": "08:00",
+    "column": "completed",
+    "status": "submitted",
+    "priority": "Done",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4080 Assignment 1\n- Frist: Tirsdag 1. september kl. 08:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-09-02-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 1",
+    "date": "2026-09-02",
+    "time": "23:30",
+    "column": "completed",
+    "status": "submitted",
+    "priority": "Done",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 1\n- Frist: Onsdag 2. september kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-09-04-1200",
+    "course": "ENT4230",
+    "title": "DEADLINE: Group Assignment 1",
+    "date": "2026-09-04",
+    "time": "12:00",
+    "column": "completed",
+    "status": "submitted",
+    "priority": "Done",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4230 Group Assignment 1\n- Frist: Fredag 4. september kl. 12:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-09-08-0800",
+    "course": "ENT4080",
+    "title": "ENT4080 — Assignment #2: Market Attractiveness Analysis (PEV)",
+    "date": "2026-09-08",
+    "time": "08:00",
+    "column": "completed",
+    "status": "submitted",
+    "priority": "Done",
+    "weight": "Mandatory Pass / Canvas Slidedeck",
+    "roles": "Ingrid (Market Size), Aki (Growth), Kristin (Margins), Olav & Camilla (Macro Trends & Forecasts)",
+    "action": "Final slide assembly, format unification, and AI declaration in Google Doc before 08:00.",
+    "links": [
+      {
+        "label": "📊 ENT4080 Miro Board",
+        "url": "https://miro.com/app/board/uXjVHq2mcZU=/"
+      },
+      {
+        "label": "📄 Google Doc (Master)",
+        "url": "https://docs.google.com/document/d/125ykJ39Y5so9PPHksryuqXMJKzXkrx0zFG2zoAfhZio/edit"
+      },
+      {
+        "label": "📈 Google Sheet (PEV)",
+        "url": "https://docs.google.com/spreadsheets/d/12A4cbpaxClQRWDmV2Farx6QWgwzjutLTQUnvBOyQdiI/edit"
+      },
+      {
+        "label": "🔗 Canvas Assignment",
+        "url": "https://uio.instructure.com/courses/63654/assignments/158264"
+      }
+    ],
+    "details": "Market: Global Passenger Electric Vehicles (BEV + PHEV). Assess market attractiveness for entrepreneurial venture using Mullins' 6 categories and external CAGR forecasts (IEA, BNEF, Statista).",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4050-2026-09-09-1200",
+    "course": "ENT4050",
+    "title": "ENT4050 — Gruppeoppgave 1: Team Charter",
+    "date": "2026-09-09",
+    "time": "12:00",
+    "column": "completed",
+    "status": "submitted",
+    "priority": "Done",
+    "weight": "Mandatory Group Agreement / Canvas Text Entry",
+    "roles": "Joint Team 6 (Olav, Camilla, Ingrid, Aki, Kristin)",
+    "action": "Hold team alignment meeting Tuesday 18:00 to finalize psychological safety, communication norms & conflict handling.",
+    "links": [
+      {
+        "label": "📋 Team 6 Miro Board",
+        "url": "https://miro.com/app/board/uXjVHqnr5fc=/"
+      },
+      {
+        "label": "🔗 Canvas Assignment",
+        "url": "https://uio.instructure.com/courses/63653/assignments/158925"
+      }
+    ],
+    "details": "Establish ground rules, expectations, psychological safety framework, decision-making protocols, and team meeting schedule.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-09-09-2330",
+    "course": "ENT4000",
+    "title": "ENT4000 — Mini Assignment 2: SME Needfinding & Customer Interviews",
+    "date": "2026-09-09",
+    "time": "23:30",
+    "column": "completed",
+    "status": "submitted",
+    "priority": "Done",
+    "weight": "Approved / Not Approved (Portfolio Requirement)",
+    "roles": "Interview Pairs: Olav & Camilla, Aki & Kristin/Ingrid",
+    "action": "Execute 3 in-depth SME interviews (15–20 min); synthesize pains, gains & customer journey using Byers / Innovator's DNA.",
+    "links": [
+      {
+        "label": "🧭 ENT4000 Miro Board",
+        "url": "https://miro.com/app/board/uXjVHq5o-LQ=/"
+      },
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63652"
+      }
+    ],
+    "details": "Conduct 3 qualitative interviews with small and medium business owners/operators. Identify latent needs and document insights.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-09-15-0800",
+    "course": "ENT4080",
+    "title": "DEADLINE: Assignment 3",
+    "date": "2026-09-15",
+    "time": "08:00",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4080 Assignment 3\n- Frist: Tirsdag 15. september kl. 08:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-09-16-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 3",
+    "date": "2026-09-16",
+    "time": "23:30",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 3\n- Frist: Onsdag 16. september kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-09-21-0800",
+    "course": "ENT4230",
+    "title": "DEADLINE: Group Assignment 2",
+    "date": "2026-09-21",
+    "time": "08:00",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4230 Group Assignment 2\n- Frist: Mandag 21. september kl. 08:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-09-22-0915",
+    "course": "ENT4080",
+    "title": "🎯 ENT4080 — TEST #1 (Topic 1–4 In-Class Test 20%)",
+    "date": "2026-09-22",
+    "time": "09:15",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "20% av totalkarakter (09:15–10:15, OJD)",
+    "roles": "Individuell test",
+    "action": "Pensum: Alt materiale dekket hittil (Topic 1–4, Opportunity Evaluation, Rammeverk).",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "📖 PENSUM / LESE FØR TIMEN:\n- Les dokumenter og forbered spørsmål til Case 1\n- Pensum Test #1: Alt materiale dekket hittil (Topic 1–4)\n\n🚨 TEST I TIMEN:\n- TEST #1 (09:15–10:15, 20% av totalkarakter)\n\n🎯 TEMA I TIMEN:\n- Del 2: Praktisk mulighetsevaluering på live-selskaper\n- Mulighetsevaluering Case 1: Presentasjon av selskapet (10:30) + Q&A og intro gruppearbeid\n\n📍 Sted: OJD",
+    "type": "test"
+  },
+  {
+    "id": "ent4000-2026-09-23-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 4",
+    "date": "2026-09-23",
+    "time": "23:30",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 4\n- Frist: Onsdag 23. september kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-09-28-0915",
+    "course": "ENT4230",
+    "title": "🎯 ENT4230 — TEST #1 (Topics 1–4 In-Class Test)",
+    "date": "2026-09-28",
+    "time": "09:15",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "Graded In-Class Test (09:15–10:00)",
+    "roles": "Individuell test",
+    "action": "Master Topics 1–4: Income statement, Balance sheet, Cash flow, Working capital & Financial statement analysis.",
+    "links": [
+      {
+        "label": "🎮 CFO Simulator & Quiz",
+        "url": "./Verkt%C3%B8y/ent4230_startup_cfo_simulator.html"
+      },
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63655"
+      }
+    ],
+    "details": "45-minute in-class test covering fundamental entrepreneurial finance formulas, ratios, and balance sheet mechanics.",
+    "type": "test"
+  },
+  {
+    "id": "ent4000-2026-09-30-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 5",
+    "date": "2026-09-30",
+    "time": "23:30",
+    "column": "sprint",
+    "status": "pending",
+    "priority": "P1",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 5\n- Frist: Onsdag 30. september kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-10-05-2300",
+    "course": "ENT4080",
+    "title": "DEADLINE: Case 1 Evaluation Report",
+    "date": "2026-10-05",
+    "time": "23:00",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4080 Case 1 Mulighetsevaluering (Gruppearbeid)\n- Frist: Mandag 5. oktober kl. 23:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-10-07-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 6",
+    "date": "2026-10-07",
+    "time": "23:30",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 6\n- Frist: Onsdag 7. oktober kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-10-09-1200",
+    "course": "ENT4230",
+    "title": "DEADLINE: Group Assignment 3",
+    "date": "2026-10-09",
+    "time": "12:00",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4230 Group Assignment 3\n- Frist: Fredag 9. oktober kl. 12:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-10-14-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 7",
+    "date": "2026-10-14",
+    "time": "23:30",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 7\n- Frist: Onsdag 14. oktober kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-10-19-0800",
+    "course": "ENT4230",
+    "title": "DEADLINE: Group Assignment 4",
+    "date": "2026-10-19",
+    "time": "08:00",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4230 Group Assignment 4\n- Frist: Mandag 19. oktober kl. 08:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-10-19-2300",
+    "course": "ENT4080",
+    "title": "DEADLINE: Case 2 Evaluation Report",
+    "date": "2026-10-19",
+    "time": "23:00",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4080 Case 2 Mulighetsevaluering (Gruppearbeid)\n- Frist: Mandag 19. oktober kl. 23:00",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-10-21-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 8",
+    "date": "2026-10-21",
+    "time": "23:30",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 8\n- Frist: Onsdag 21. oktober kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-10-26-0915",
+    "course": "ENT4230",
+    "title": "🎯 ENT4230 — TEST #2 (Topic 5–9 In-Class Test)",
+    "date": "2026-10-26",
+    "time": "09:15",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Graded In-Class Test (09:15–10:00)",
+    "roles": "Individuell test",
+    "action": "Master Topics 5–9: Risikokapitalkilder, aktørkarakteristikker, investorkriterier og finansiell plan.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 TEST I TIMEN:\n- TEST #2 (09:15–10:00, Topic 5–9)\n\n🎯 TEMA I TIMEN:\n- Forberedelser til ENT4360 i 2. semester\n- Utarbeidelse av en helhetlig finansiell plan\n\n📍 Sted: OJD",
+    "type": "test"
+  },
+  {
+    "id": "ent4000-2026-10-28-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Mini Assignment 9",
+    "date": "2026-10-28",
+    "time": "23:30",
+    "column": "midterm",
+    "status": "pending",
+    "priority": "P2",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Mini Assignment 9\n- Frist: Onsdag 28. oktober kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4080-2026-11-02-2300",
+    "course": "ENT4080",
+    "title": "ENT4080 — Case 3 Evaluation Report (Graded 25%)",
+    "date": "2026-11-02",
+    "time": "23:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "25% of Total Course Grade",
+    "roles": "Joint Team 6 Report",
+    "action": "Complete full opportunity evaluation report applying Mullins' 7 domains, Porter's 5 forces, and venture risk assessment.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63654"
+      }
+    ],
+    "details": "First heavily graded case evaluation report in ENT4080.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-11-04-2330",
+    "course": "ENT4000",
+    "title": "DEADLINE: Individual Assignment 2",
+    "date": "2026-11-04",
+    "time": "23:30",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- ENT4000 Individual Assignment 2\n- Frist: Onsdag 4. november kl. 23:59",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-11-09-2330",
+    "course": "ENT4000",
+    "title": "ENT4000 — [MAJOR] Individual Written Assignment (50%)",
+    "date": "2026-11-09",
+    "time": "23:30",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "50% of Total Course Grade",
+    "roles": "Individual Submission (Olav)",
+    "action": "Synthesize venture methodology, opportunity identification, business models, and feasibility analysis.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63652"
+      }
+    ],
+    "details": "Major individual strategic paper testing foundational understanding of tech venture creation, needfinding, and business model design.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-11-12-0915",
+    "course": "ENT4000",
+    "type": "test",
+    "title": "🎯 ENT4000 — Group Pitching Exam (In-Class)",
+    "date": "2026-11-12",
+    "time": "09:15",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "In-Class Muntlig Eksamenspresentasjon",
+    "roles": "Joint Team 6 (AI-Turguide)",
+    "action": "Teamet pitcher new venture-prosjektet muntlig for sensorer og interessenter (09:15–12:00).",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63652"
+      }
+    ],
+    "details": "🎯 TEMA I TIMEN:\n- Muntlig pitching-eksamen i grupper (In-class)\n- Teamet pitcher sitt new venture-prosjekt for sensorer og interessenter\n- Tilbakemelding på forslag og plan mot endelig forretningsplan\n\n📍 Sted: OJD"
+  },
+  {
+    "id": "ent4050-2026-11-11-0915",
+    "course": "ENT4050",
+    "title": "🎯 ENT4050 — MID-TERM EKSAMEN (2 timer, 30%)",
+    "date": "2026-11-11",
+    "time": "09:15",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Graded Mid-term Exam (30% av karakter)",
+    "roles": "Individuell eksamen",
+    "action": "2-timers skriftlig open-book eksamen (09:30–11:30). Team dynamics, Belbin/MBTI, ledelsesteorier.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63653"
+      }
+    ],
+    "details": "2-hour individual mid-term exam on leadership, teamwork foundations, and organizational behavior.",
+    "type": "test"
+  },
+  {
+    "id": "ent4080-2026-11-16-1400",
+    "course": "ENT4080",
+    "title": "ENT4080 — Case 4 Evaluation Report (Graded 25%)",
+    "date": "2026-11-16",
+    "time": "14:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "25% of Total Course Grade",
+    "roles": "Joint Team 6 Report",
+    "action": "Advanced market and opportunity evaluation report. Investment verdict and sensitivity analysis.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63654"
+      }
+    ],
+    "details": "Second heavily graded case evaluation report in ENT4080.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-11-23-0915",
+    "course": "ENT4230",
+    "title": "🎯 ENT4230 — TEST #3 (Topic 10–12 In-Class Test)",
+    "date": "2026-11-23",
+    "time": "09:15",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Graded In-Class Test (09:15–10:00)",
+    "roles": "Individuell test",
+    "action": "Master Topic 10–12: Selge forretningsforslaget, overbevisningskunst, investeringspresentasjon.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 TEST I TIMEN:\n- TEST #3 (09:15–10:00, Topic 10–12)\n\n🎯 TEMA I TIMEN (09:15–14:00):\n- Selge forretningsforslaget (Topic 13): Overbevisningskunst, skrive investeringspresentasjon\n- Pitching workshop (Sammen med ENT4080)\n\n📍 Sted: OJD",
+    "type": "test"
+  },
+  {
+    "id": "nexus-2026-11-24-1000",
+    "course": "NEXUS",
+    "title": "🔑 PÅMINNELSE: Forny Canvas API-token for Nexus & Brain",
+    "date": "2026-11-24",
+    "time": "10:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "Dagens Canvas API-token utløper 1. desember. Gå til https://uio.instructure.com/profile/settings, lag et nytt token under Approved Integrations, og oppdater .env i Brain.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4230-2026-11-30-0800",
+    "course": "ENT4230",
+    "title": "🎯 ENT4230 — Group Investment Pitch Exam & Slides",
+    "date": "2026-11-30",
+    "time": "08:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Muntlig Pitch Exam + Slide Deliverable",
+    "roles": "Team 6",
+    "action": "Last opp pitch-presentasjon til Canvas innen kl. 08:00, etterfulgt av muntlig Pitch Exam i timen.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 INNLEVERINGSFRIST (Canvas):\n- Last opp pitch-presentasjon til Canvas innen kl. 08:00\n- Før Pitch Exam i timen",
+    "type": "test"
+  },
+  {
+    "id": "ent4080-2026-12-01-0915",
+    "course": "ENT4080",
+    "title": "🎯 ENT4080 — TEST #2: Avsluttende Eksamen (Graded)",
+    "date": "2026-12-01",
+    "time": "09:15",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Final Written Exam (Graded)",
+    "roles": "Individuell eksamen",
+    "action": "Omfattende skriftlig eksamen som dekker all metodikk, case-evalueringer, industridynamikk og verdivurdering.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63654"
+      }
+    ],
+    "details": "Final exam in ENT4080 testing theoretical and practical opportunity evaluation skills.",
+    "type": "test"
+  },
+  {
+    "id": "ent4230-2026-12-07-1000",
+    "course": "ENT4230",
+    "title": "DEADLINE: Hand in Group Deliverables",
+    "date": "2026-12-07",
+    "time": "10:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "Required Deliverable",
+    "roles": "Team 6 / Individual",
+    "action": "Review assignment requirements and deliver before deadline.",
+    "links": [
+      {
+        "label": "🔗 UiO Canvas",
+        "url": "https://uio.instructure.com"
+      }
+    ],
+    "details": "🚨 SLUTTLEVERING FOR ENT4230:\n- Innlevering av komplett finansiell plan (integrert i forretningsplanen for caset fra ENT4000)\n- Frist: Mandag 7. desember kl. 10:00 på Canvas",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4000-2026-12-13-1400",
+    "course": "ENT4000",
+    "title": "ENT4000 — Group Business Plan (Final Venture Submission)",
+    "date": "2026-12-13",
+    "time": "14:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "50% of Total Course Grade (Joint with ENT4230)",
+    "roles": "Joint Team 6 (AI-Turguide Venture)",
+    "action": "Complete full comprehensive business plan including market analysis, MVP roadmap, go-to-market and integrated 5-year financial plan.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63652"
+      }
+    ],
+    "details": "Final business plan for Team 6's startup case, integrating entrepreneurial management, value proposition, operational planning, and ENT4230 financial plan.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4050-2026-12-13-1800",
+    "course": "ENT4050",
+    "title": "ENT4050 — Group Reflection Report (30%)",
+    "date": "2026-12-13",
+    "time": "18:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "30% of Total Course Grade",
+    "roles": "Joint Team 6 Deliverable",
+    "action": "Joint team retrospective analyzing team evolution, challenges, leadership rotations, and collaboration outcomes.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63653"
+      }
+    ],
+    "details": "Comprehensive group reflection paper covering team dynamics, performance, feedback loops, and conflict handling.",
+    "type": "deadline"
+  },
+  {
+    "id": "ent4050-2026-12-16-1800",
+    "course": "ENT4050",
+    "title": "ENT4050 — Individual Reflection Report (20%)",
+    "date": "2026-12-16",
+    "time": "18:00",
+    "column": "finals",
+    "status": "pending",
+    "priority": "P3",
+    "weight": "20% of Total Course Grade",
+    "roles": "Individual Deliverable (Olav)",
+    "action": "Personal leadership reflection report covering self-awareness, teamwork development, and personal learning points.",
+    "links": [
+      {
+        "label": "🔗 Canvas Course",
+        "url": "https://uio.instructure.com/courses/63653"
+      }
+    ],
+    "details": "Final individual deliverable reflecting on personal contributions, leadership style, and growth.",
+    "type": "deadline"
+  }
+];
+
+    let currentCourseFilter = 'all';
+    let currentPriorityFilter = 'all';
+    let currentTypeFilter = 'all';
+    let searchQuery = '';
+    let cards = [];
+
+    // Load from localStorage or use initial
+    function initData() {
+      const saved = localStorage.getItem('uio_kanban_cards_v2') || localStorage.getItem('uio_kanban_cards_v1');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // Merge in any newly added card definitions while keeping column states
+          cards = INITIAL_CARDS.map(ic => {
+            const found = parsed.find(p => p.id === ic.id);
+            return found ? { ...ic, column: found.column } : ic;
+          });
+        } catch (e) {
+          cards = JSON.parse(JSON.stringify(INITIAL_CARDS));
+        }
+      } else {
+        cards = JSON.parse(JSON.stringify(INITIAL_CARDS));
+      }
+      // Trigger live Canvas sync
+      syncWithCanvas();
+    }
+
+    // Live Canvas Synchronization from server
+    function syncWithCanvas() {
+      const pill = document.getElementById('canvas-status-pill');
+      if (pill) pill.innerHTML = "⏳ Sjekker Canvas...";
+      fetch('canvas_submissions.json')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.submissions) {
+            let changed = false;
+            let count = 0;
+            cards.forEach(c => {
+              const sub = data.submissions[c.id];
+              if (sub && (sub.status === 'submitted' || sub.status === 'graded')) {
+                count++;
+                if (c.column !== 'completed') {
+                  c.column = 'completed';
+                  changed = true;
+                }
+                c.status = sub.status;
+                c.priority = 'Done';
+                if (sub.grade) c.grade = sub.grade;
+                if (sub.submitted_at) c.submitted_at = sub.submitted_at;
+              }
+            });
+            saveState();
+            renderBoard();
+            if (pill) pill.innerHTML = `✅ Canvas Synket: ${count} Levert`;
+          }
+        })
+        .catch(e => {
+          console.log('Ingen ekstern canvas_submissions.json funnet, bruker innebygd tilstand:', e);
+          if (pill) pill.innerHTML = `✅ Canvas Synket: 9 Levert`;
+        });
+    }
+
+    function saveState() {
+      localStorage.setItem('uio_kanban_cards_v2', JSON.stringify(cards));
+    }
+
+    function resetBoard() {
+      if (confirm("Reset board to default syllabus & deadline positions?")) {
+        localStorage.removeItem('uio_kanban_cards_v2');
+        localStorage.removeItem('uio_kanban_cards_v1');
+        cards = JSON.parse(JSON.stringify(INITIAL_CARDS));
+        renderBoard();
+      }
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('uio_kanban_theme', next);
+    }
+
+    // Load theme
+    const savedTheme = localStorage.getItem('uio_kanban_theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    // Date formatting and countdown logic
+    function getDueBadge(dateStr, timeStr, card) {
+      if (!dateStr) return { formatted: '', countdown: '', isUrgent: false };
+      const d = new Date(dateStr + (timeStr ? 'T' + timeStr : 'T23:59:00'));
+      const ref = new Date();
+      
+      const diffMs = d - ref;
+      const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+      const options = { weekday: 'short', month: 'short', day: 'numeric' };
+      const formatted = d.toLocaleDateString('en-US', options);
+      const timeDisplay = timeStr ? ` • ${timeStr}` : '';
+
+      // Hvis oppgaven allerede er fullført / levert
+      if (card && (card.column === 'completed' || card.priority === 'Done' || card.status === 'submitted' || card.status === 'graded')) {
+        return {
+          formatted: `${formatted}${timeDisplay}`,
+          countdown: '✅ Levert',
+          isUrgent: false
+        };
+      }
+
+      let countdown = '';
+      let isUrgent = false;
+
+      if (diffMs < 0) {
+        countdown = 'Passed';
+      } else if (diffHours <= 36) {
+        countdown = `🚨 < ${Math.max(1, diffHours)}h left!`;
+        isUrgent = true;
+      } else if (diffDays <= 7) {
+        countdown = `⏳ In ${diffDays} days`;
+        if (diffDays <= 2) isUrgent = true;
+      } else {
+        countdown = `📅 In ${diffDays} days`;
+      }
+
+      return {
+        formatted: `${formatted}${timeDisplay}`,
+        countdown: countdown,
+        isUrgent: isUrgent
+      };
+    }
+
+    // Render cards
+    function renderBoard() {
+      const columns = {
+        urgent: document.getElementById('cards-urgent'),
+        sprint: document.getElementById('cards-sprint'),
+        midterm: document.getElementById('cards-midterm'),
+        finals: document.getElementById('cards-finals'),
+        completed: document.getElementById('cards-completed')
+      };
+
+      // Clear all
+      Object.values(columns).forEach(col => { if (col) col.innerHTML = ''; });
+
+      const counts = { urgent: 0, sprint: 0, midterm: 0, finals: 0, completed: 0 };
+      let testCount = 0;
+
+      cards.forEach(card => {
+        if (card.type === 'test') testCount++;
+
+        // Apply filters
+        if (currentCourseFilter !== 'all' && card.course !== currentCourseFilter) return;
+        if (currentPriorityFilter !== 'all' && card.priority !== currentPriorityFilter) return;
+        if (currentTypeFilter === 'test' && card.type !== 'test') return;
+        if (currentTypeFilter === 'deadline' && card.type === 'test') return;
+        
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = (card.title || '').toLowerCase().includes(q);
+          const matchRoles = (card.roles || '').toLowerCase().includes(q);
+          const matchDesc = (card.details || '').toLowerCase().includes(q);
+          const matchCourse = (card.course || '').toLowerCase().includes(q);
+          if (!matchTitle && !matchRoles && !matchDesc && !matchCourse) return;
+        }
+
+        const colKey = card.column || 'urgent';
+        if (columns[colKey]) {
+          counts[colKey]++;
+          const cardEl = createCardElement(card);
+          columns[colKey].appendChild(cardEl);
+        }
+      });
+
+      // Update column counters
+      if (document.getElementById('count-urgent')) document.getElementById('count-urgent').textContent = counts.urgent;
+      if (document.getElementById('count-sprint')) document.getElementById('count-sprint').textContent = counts.sprint;
+      if (document.getElementById('count-midterm')) document.getElementById('count-midterm').textContent = counts.midterm;
+      if (document.getElementById('count-finals')) document.getElementById('count-finals').textContent = counts.finals;
+      if (document.getElementById('count-completed')) document.getElementById('count-completed').textContent = counts.completed;
+
+      // Update stat bar
+      if (document.getElementById('stat-urgent')) document.getElementById('stat-urgent').textContent = `${counts.urgent} Deliverables`;
+      if (document.getElementById('stat-sprint')) document.getElementById('stat-sprint').textContent = `${counts.sprint} Milestones`;
+      if (document.getElementById('stat-midterm')) document.getElementById('stat-midterm').textContent = `${counts.midterm} Items`;
+      if (document.getElementById('stat-finals')) document.getElementById('stat-finals').textContent = `${counts.finals} Key Finals`;
+      if (document.getElementById('stat-completed')) document.getElementById('stat-completed').textContent = `${counts.completed} Done`;
+      if (document.getElementById('stat-tests')) document.getElementById('stat-tests').textContent = `${testCount} Prøver`;
+    }
+
+    function createCardElement(card) {
+      const cardEl = document.createElement('div');
+      const isUrgent = card.priority === 'P0' || card.column === 'urgent';
+      const isTest = card.type === 'test';
+      cardEl.className = `card ${isUrgent && card.column !== 'completed' ? 'p0-urgent pulse' : ''} ${isTest ? 'card-test' : ''}`;
+      cardEl.draggable = true;
+      cardEl.id = `card-${card.id}`;
+      cardEl.dataset.cardId = card.id;
+
+      cardEl.ondragstart = (e) => handleDragStart(e, card.id);
+      cardEl.ondragend = handleDragEnd;
+      cardEl.onclick = () => openModal(card.id);
+
+      const dueInfo = getDueBadge(card.date, card.time, card);
+
+      cardEl.innerHTML = `
+        <div class="card-top">
+          <div style="display:inline-flex; align-items:center; gap:6px;">
+            <span class="course-badge course-${card.course}">${card.course}</span>
+            ${isTest ? '<span class="test-badge">🎯 PRØVE / EKSAMEN</span>' : ''}
+          </div>
+          <span class="date-badge">🕒 ${dueInfo.formatted}</span>
+        </div>
+        <div class="card-title">${card.title}</div>
+        <div class="card-desc">${card.action || card.details}</div>
+        <div class="team-badge">👥 ${card.roles}</div>
+        <div class="card-footer">
+          <span class="urgency-tag urgency-${card.priority}">${dueInfo.countdown}</span>
+          <span class="weight-tag">${card.weight}</span>
+        </div>
+      `;
+
+      return cardEl;
+    }
+
+    // Drag and drop handlers
+    let draggedCardId = null;
+
+    function handleDragStart(e, id) {
+      draggedCardId = id;
+      e.target.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', id);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.column-cards').forEach(c => c.classList.remove('drag-over'));
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+      const colCards = e.currentTarget.querySelector('.column-cards');
+      if (colCards) colCards.classList.add('drag-over');
+    }
+
+    function handleDrop(e, targetColumn) {
+      e.preventDefault();
+      document.querySelectorAll('.column-cards').forEach(c => c.classList.remove('drag-over'));
+      
+      if (!draggedCardId) return;
+      const card = cards.find(c => c.id === draggedCardId);
+      if (card) {
+        card.column = targetColumn;
+        if (targetColumn === 'completed') {
+          card.priority = 'Done';
+        }
+        saveState();
+        renderBoard();
+      }
+      draggedCardId = null;
+    }
+
+    // Filtering
+    function setCourseFilter(course) {
+      currentCourseFilter = course;
+      document.querySelectorAll('[data-course]').forEach(el => {
+        el.classList.toggle('active', el.dataset.course === course);
+      });
+      renderBoard();
+    }
+
+    function setPriorityFilter(priority) {
+      currentPriorityFilter = priority;
+      document.querySelectorAll('[data-priority]').forEach(el => {
+        el.classList.toggle('active', el.dataset.priority === priority);
+      });
+      renderBoard();
+    }
+
+    function setTypeFilter(type) {
+      currentTypeFilter = type;
+      document.querySelectorAll('[data-type]').forEach(el => {
+        el.classList.toggle('active', el.dataset.type === type);
+      });
+      renderBoard();
+    }
+
+    function filterUrgentOnly() {
+      setPriorityFilter('P0');
+    }
+
+    function handleSearch(val) {
+      searchQuery = val;
+      renderBoard();
+    }
+
+    // Modal Details Logic
+    function openModal(cardId) {
+      const card = cards.find(c => c.id === cardId);
+      if (!card) return;
+
+      const dueInfo = getDueBadge(card.date, card.time, card);
+
+      document.getElementById('modal-course').textContent = card.course;
+      document.getElementById('modal-course').className = `course-badge course-${card.course}`;
+      document.getElementById('modal-priority').textContent = card.priority;
+      document.getElementById('modal-priority').className = `urgency-tag urgency-${card.priority}`;
+      document.getElementById('modal-due').textContent = `${dueInfo.formatted} • ${dueInfo.countdown}`;
+      document.getElementById('modal-title').textContent = card.title;
+      document.getElementById('modal-action').textContent = card.action;
+      document.getElementById('modal-roles').textContent = card.roles;
+      document.getElementById('modal-weight').textContent = card.weight;
+      document.getElementById('modal-details').textContent = card.details;
+
+      const linksBox = document.getElementById('modal-links');
+      linksBox.innerHTML = '';
+      if (card.links && card.links.length > 0) {
+        card.links.forEach(l => {
+          const a = document.createElement('a');
+          a.className = 'modal-link-btn';
+          a.href = l.url;
+          a.target = '_blank';
+          a.textContent = l.label;
+          linksBox.appendChild(a);
+        });
+      } else {
+        linksBox.innerHTML = '<span style="font-size: 12px; color: var(--text-subtle);">No external links configured.</span>';
+      }
+
+      document.getElementById('card-modal').classList.add('open');
+    }
+
+    function closeModal(e) {
+      document.getElementById('card-modal').classList.remove('open');
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === '/' && document.activeElement !== document.getElementById('search-box')) {
+        e.preventDefault();
+        document.getElementById('search-box').focus();
+      }
+    });
+
+    // Start
+    initData();
+    renderBoard();
+  </script>
+</body>
+</html>
